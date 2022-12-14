@@ -35,15 +35,20 @@ const userSchema = new Schema({
     },
     isActiveToken: {
         type: String,
-        required: true,
+        required: false,
     },
     workoutList: {
         type: Array,
         default: []
     },
     gender: {
-        type: String
+        type: String,
+        default: "",
     },
+    date: {
+        type: Date,
+        default: Date.now,
+    }
 
 
 });
