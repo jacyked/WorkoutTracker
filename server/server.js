@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+const users = require("./routes/users");
 
 const app = express()
 
@@ -12,6 +14,7 @@ app.use(
     })
 );
 app.use(bodyParser.json());
+
 
 app.use((req, res, next) => {
     console.log(req.path, req.method)
@@ -27,9 +30,16 @@ mongoose
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
+//Passport middleware
+app.use(passport.initialize());
+// Passport config
+require("./config/passport")(passport);
+// Routes
+app.use("/users", users);
 
 const port = process.env.PORT;
 
 app.listen(port, () => {
     console.log('Listening on port: ' + port);
 });
+
