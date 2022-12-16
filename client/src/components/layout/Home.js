@@ -20,6 +20,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 
 const Home = () => {
+
+
+
+
+    
     return (
         <DashboardContent />
     );
@@ -107,7 +112,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Home
+              Dashboard
             </Typography>
           </Toolbar>
         </AppBar>
