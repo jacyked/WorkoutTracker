@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -13,14 +13,40 @@ import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { mainListItems, secondaryListItems } from "./ListItems.js";
+import { mainListItems, secondaryListItems } from "../layout/ListItems.js";
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 
-const Home = () => {
 
+const USER_URL="/users";
+
+const Home = () => {
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getUser = async() => {
+        try{
+            const response = await axios.get(USER_URL, {
+                signal: controller.signal
+            });
+            isMounted && setUser(response.data);
+        }catch(err){
+            console.error(err);
+        }
+
+    }
+    getUser();
+
+    return () => {
+        isMounted = false;
+        controller.abort();
+    }
+  }, [])
 
 
 

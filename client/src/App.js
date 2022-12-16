@@ -7,10 +7,10 @@ import Layout from "./components/Layout";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Error from "./components/Error";
-import Home from "./components/layout/Home";
+import Home from "./components/user/Home";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RequireAuth from "./components/auth/RequireAuth";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "./components/user/UserProfile";
 
 
 
