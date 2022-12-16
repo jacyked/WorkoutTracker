@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const users = require("./routes/users");
+const refresh = require("./routes/refresh");
 const cors = require("cors");
 
 
@@ -38,6 +39,7 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 // Routes
 app.use("/users", users);
+app.use("/refresh", refresh);
 
 const port = process.env.PORT;
 

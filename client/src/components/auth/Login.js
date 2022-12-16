@@ -50,6 +50,7 @@ const Login = () => {
                     withCredentials: true
                 }})
             const accessToken = response?.data.accessToken;
+            console.log(response.data);
             setAuth({ email, password, accessToken })
             setEmail('');
             setPassword('');

@@ -6,7 +6,7 @@ const verifyJWT = async (req, res, next) => {
     const token = authHeader.split(' ')[1]
     jwt.verify(
         token,
-        process.env.SECRET_OR_KEY,
+        process.env.ACCESS_SECRET,
         (err, decoded) => {
             if (err) return res.status(403).json("Forbidden")
             req.id = decoded.id

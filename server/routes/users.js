@@ -9,12 +9,10 @@ const validateLoginInput = require("../middleware/validation/login");
 
 const User = require("../models/userModel");
 
-// @route POST %BASE_URL%/users/register
-// @desc Register user
-// @access Public
+//Redo this with new implimentations
 router.get("/", async (req, res) => {
     const accessToken = req.body.accessToken;
-    const decoded = jwt.verify(accessToken, process.env.SECRET_OR_KEY);
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
     const user = await User.findById(decoded.id);
     const redirect_url = process.env.CLIENT_URL + '/login'
     if(!user){
@@ -37,6 +35,9 @@ router.get("/", async (req, res) => {
     
 });
 
+// @route POST %BASE_URL%/users/register
+// @desc Register user
+// @access Public
 router.post("/register", (req, res) => {
     // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -95,29 +96,42 @@ router.post("/login", (req, res) => {
         return res.status(404).json({ emailnotfound: "Email not found" });
       }
   // Check password
-      bcrypt.compare(password, user.password).then(isMatch => {
+      bcrypt.compare(password, user.password).then( async isMatch => {
         if (isMatch) {
           // User matched
           // Create JWT Payload
-          const payload = {
-            id: user.id,
-            email: user.email
-          };
-  // Sign token
-          jwt.sign(
-            payload,
-            process.env.SECRET_OR_KEY,
-            {
-              expiresIn: process.env.LOGIN_EXP // 1 year in seconds
-            },
-            async (err, token) => {
-                await User.findByIdAndUpdate(user.id, { $set: { refreshToken: token } }, { new:true });
-                res.json({
-                    success: true,
-                    accessToken: "Bearer " + token
-                });
-            }
-          );
+            const accessToken = jwt.sign(
+                { 
+                "id": user.id, 
+                "email": user.email
+                }, 
+                process.env.ACCESS_SECRET, 
+                { expiresIn: process.env.ACCESS_EXP }
+            )
+            const refreshToken = jwt.sign(
+                { 
+                "id": user.id, 
+                "isAdmin": user.isAdmin
+                }, 
+                process.env.REFRESH_SECRET, 
+                { expiresIn: process.env.REFRESH_EXP }
+            )
+            // Add refresh token to db
+            await User.findByIdAndUpdate(user.id, { $set: { refreshToken: refreshToken } }, { new:true })
+            // Create secure cookie with refresh token
+            res
+            .cookie("jwt", refreshToken, {
+                httpOnly: false, // Accessible only by web server, set true after testing
+                secure: false, // Enables https ** CHANGE SECURE TO TRUE BEFORE DEPLOYMENT **
+                // sameSite: "None", // Cross-site cookie
+                maxAge: process.env.LOGIN_EXP, // Cookie expiry
+            })
+            .status(200)
+            .json({
+                accessToken: accessToken,
+            })
+
+
         } else {
           return res
             .status(400)
