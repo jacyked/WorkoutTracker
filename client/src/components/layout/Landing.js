@@ -1,48 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
+import CssBaseline from '@mui/material/CssBaseline';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+
 function Landing() {
-  
+    
+
     return (
     <React.Fragment>
-      <div style={{ height: "75vh" }} className="container valign-wrapper">
-        <div className="row">
-          <div className="col s12 center-align">
-            <h4>
-              <b>Build</b> your dream physique
-            </h4>
-            <p className="flow-text grey-text text-darken-1">
-              Track your workouts, monitor your progress, and display your results
-            </p>
-            <br />
-            <div className="col s6">
-              <Link
-                to="/register"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px"
-                }}
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-              >
-                Register
-              </Link>
-            </div>
-            <div className="col s6">
-              <Link
-                to="/login"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px"
-                }}
-                className="btn btn-large btn-flat waves-effect white black-text"
-              >
-                Log In
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+            
+                <Container component="main" maxWidth="s" className="center">
+                    <CssBaseline />
+                    <Box sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+                        <Typography variant="h4" style={{"textAlign": "center"}}>
+                            <strong>Build</strong> your dream physique
+                        </Typography>
+                        <br />
+                        <br />
+                        <Box sx={{ mt: 1 }}>
+                            <Button variant="contained" href="/login">Log In</Button>
+                        </Box>
+                        <Box sx={{ mt: 1 }}>
+                        <Button variant="outlined" href="/register">Register</Button>
+                        </Box>
+                    </Box>
+                </Container>
+            
+
       </React.Fragment>
     );
   
