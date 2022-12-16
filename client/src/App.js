@@ -3,29 +3,34 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
+import Layout from "./components/Layout";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import Error from "./components/Error";
+import Home from "./components/layout/Home";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import RequireAuth from "./components/auth/RequireAuth";
+import UserProfile from "./components/UserProfile";
 
 
-const theme = createTheme({
 
-});
 function App() {
   return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <div className="App-header">
-        <Router>
           <Routes>
-          <Route exact path="/" element ={<Landing />}/>
-            <Route exact path="/register" element={<Register />}/>
-            <Route exact path="/login" element={<Login />}/>
+            <Route exact path="/" element ={<Layout />}>
+              {/* Public Routes */}
+              <Route path="/" element={<Landing />}/>
+              <Route path="register" element={<Register />}/>
+              <Route path="login" element={<Login />}/>
+
+              <Route element={<RequireAuth />}>
+                <Route path="home" element={<Home />}/>
+                <Route path="user" element={<UserProfile />}/>
+              </Route>
+
+              <Route path="*" element={<Error />}/>
+            </Route>
           </Routes>
-        </Router>
-        </div>
-      </ThemeProvider>
-    </div>
   );
 }
 

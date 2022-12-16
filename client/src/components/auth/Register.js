@@ -1,25 +1,24 @@
-import React, { Component, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "../../api/axios";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const REGISTER_URL = "/users/register";
 
 const Register = () => {
     const userRef = useRef();
@@ -65,8 +64,33 @@ const Register = () => {
             setErrMsg("Invalid Submission");
             return;
         }
-        else{
+        try{
+            const response = await axios.post(REGISTER_URL, JSON.stringify({username, email, password, password2: matchPassword}),
+            {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+            );
+            //Add account activation process
             setSuccess(true);
+
+            setUserName('');
+            setPassword('');
+            setEmail('');
+            setMatchPassword('');
+            setErrMsg('');
+
+        }catch(err){
+            if(!err?.response) {
+                setErrMsg("No Server Reponse");
+            }
+            else if(err.response?.status === 409){
+                setErrMsg(err.response.data.errMsg);
+            }
+            else{
+                setErrMsg("Registration Failed")
+            };
+            errRef.current.focus();
         }
 
     }
@@ -113,6 +137,7 @@ const Register = () => {
                         alignItems: 'center',
                     }}>
                         <Typography component="p" variant="subtitle1"> Succesfully registered! </Typography>
+                        <br />
                         <Button component={Link} to="/login">Log In</Button>
                     </Box>
                 </Container>
@@ -120,7 +145,7 @@ const Register = () => {
                 <Container component="main" maxWidth="xs" >
                     <CssBaseline />
                     <Box sx={{marginTop: 2}}>
-                        <Button variant="text" size="small" href="/" startIcon={<ArrowBackIosIcon />}> Back to home</Button>
+                        <Button variant="text" size="small" component={Link} to="/" startIcon={<ArrowBackIosIcon />}> Back to home</Button>
                     </Box>
                     <Box sx={{
                         marginTop: 6,
@@ -136,31 +161,31 @@ const Register = () => {
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <Typography component="p" variant="subtitle1" ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</Typography>
-                        <span>
-                            <TextField
-                            InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    {validUName ? <CheckCircleIcon/> : (!username ? "" : <CancelIcon/>)}
-                                  </InputAdornment>
-                                ),
-                              }}
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            ref={userRef}
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            aria-invalid={validUName ? "false" : "true"}
-                            aria-describedby="uidnote"
-                            onChange={(e) => setUserName(e.target.value)}
-                            onFocus={() => setUserFocus(true)}
-                            onBlur={() => setUserFocus(false)}
-                            autoFocus
-                            />
-                        </span>
+                        
+                        <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                {validUName ? <CheckCircleIcon/> : (!username ? "" : <CancelIcon/>)}
+                                </InputAdornment>
+                            ),
+                            }}
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        ref={userRef}
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
+                        aria-invalid={validUName ? "false" : "true"}
+                        aria-describedby="uidnote"
+                        onChange={(e) => setUserName(e.target.value)}
+                        onFocus={() => setUserFocus(true)}
+                        onBlur={() => setUserFocus(false)}
+                        autoFocus
+                        />
+                        
                         <TextField
                             InputProps={{
                                 startAdornment: (

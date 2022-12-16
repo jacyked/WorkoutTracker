@@ -12,6 +12,31 @@ const User = require("../models/userModel");
 // @route POST %BASE_URL%/users/register
 // @desc Register user
 // @access Public
+router.get("/", async (req, res) => {
+    const accessToken = req.body.accessToken;
+    const decoded = jwt.verify(accessToken, process.env.SECRET_OR_KEY);
+    const user = await User.findById(decoded.id);
+    const redirect_url = process.env.CLIENT_URL + '/login'
+    if(!user){
+        res.redirect(404, redirect_url);
+    }else{
+        if (accessToken === user.refreshToken){
+            res.status(200).json({
+                username: user.username,
+                email: user.email,
+                date: user.date,
+                workouts: user.workoutList,
+                gender: user.gender
+
+            });
+        }
+        else{
+            res.redirect(400, redirect_url);
+        }
+    }
+    
+});
+
 router.post("/register", (req, res) => {
     // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -21,11 +46,11 @@ router.post("/register", (req, res) => {
     }
   User.findOne({ email: req.body.email }).then(user => {
       if (user) {
-        return res.status(400).json({ email: "Email already exists" });
+        return res.status(409).json({ errMsg: "Email already exists" });
       } else {
         User.findOne({username: req.body.username}).then(user => {
             if (user) {
-                return res.status(400).json({ username: "Username already exists" });
+                return res.status(409).json({ errMsg: "Username already exists" });
             } else {
                 const newUser = new User({
                     name: req.body.name,
@@ -83,13 +108,14 @@ router.post("/login", (req, res) => {
             payload,
             process.env.SECRET_OR_KEY,
             {
-              expiresIn: 31556926 // 1 year in seconds
+              expiresIn: process.env.LOGIN_EXP // 1 year in seconds
             },
-            (err, token) => {
-              res.json({
-                success: true,
-                token: "Bearer " + token
-              });
+            async (err, token) => {
+                await User.findByIdAndUpdate(user.id, { $set: { refreshToken: token } }, { new:true });
+                res.json({
+                    success: true,
+                    accessToken: "Bearer " + token
+                });
             }
           );
         } else {

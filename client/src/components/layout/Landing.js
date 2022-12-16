@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
+import { Link } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
@@ -30,10 +30,10 @@ function Landing() {
                         <br />
                         <br />
                         <Box sx={{ mt: 1 }}>
-                            <Button variant="contained" href="/login">Log In</Button>
+                            <Button variant="contained" component={Link} to="/login" >Log In</Button>
                         </Box>
                         <Box sx={{ mt: 1 }}>
-                        <Button variant="outlined" href="/register">Register</Button>
+                            <Button variant="outlined" component={Link} to="/register ">Register</Button>
                         </Box>
                     </Box>
                 </Container>
