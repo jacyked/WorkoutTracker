@@ -17,13 +17,16 @@ import { mainListItems, secondaryListItems } from "../layout/ListItems.js";
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
+import WorkoutList from './WorkoutList';
 
 
 
 const USER_URL="/users";
 
 const Home = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     let isMounted = true;
@@ -31,10 +34,12 @@ const Home = () => {
 
     const getUser = async() => {
         try{
-            const response = await axios.get(USER_URL, {
+            const response = await axiosPrivate.get('/api', {
                 signal: controller.signal
             });
+            console.log(response.data);
             isMounted && setUser(response.data);
+            //console.log("User: " + JSON.stringify(response.data));
         }catch(err){
             console.error(err);
         }
@@ -52,7 +57,7 @@ const Home = () => {
 
     
     return (
-        <DashboardContent />
+        <DashboardContent user = {user}/>
     );
 }
 
@@ -103,11 +108,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 
-function DashboardContent() {
+function DashboardContent(props) {
   const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  let workoutList = [];
+  try{
+    workoutList = props.user.workoutList
+  }catch(err){
+      workoutList = [];
+  }
 
   return (
     
@@ -176,7 +187,40 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            
+            <Grid container spacing={3}>
+              {/* COMPONENT 1 */}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  {/*  ADD COMPONENT HERE  */}
+                </Paper>
+              </Grid>
+              {/* COMPONENT 2 */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  {/* ADD COMPONENT 2 */}
+                </Paper>
+              </Grid>
+              {/* Workout List: */}
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <WorkoutList workoutList={workoutList}/>
+                </Paper>
+              </Grid>
+            </Grid>
 
               
               

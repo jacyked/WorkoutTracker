@@ -9,32 +9,6 @@ const validateLoginInput = require("../middleware/validation/login");
 
 const User = require("../models/userModel");
 
-//Redo this with new implimentations
-router.get("/", async (req, res) => {
-    const accessToken = req.body.accessToken;
-    const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
-    const user = await User.findById(decoded.id);
-    const redirect_url = process.env.CLIENT_URL + '/login'
-    if(!user){
-        res.redirect(404, redirect_url);
-    }else{
-        if (accessToken === user.refreshToken){
-            res.status(200).json({
-                username: user.username,
-                email: user.email,
-                date: user.date,
-                workouts: user.workoutList,
-                gender: user.gender
-
-            });
-        }
-        else{
-            res.redirect(400, redirect_url);
-        }
-    }
-    
-});
-
 // @route POST %BASE_URL%/users/register
 // @desc Register user
 // @access Public
@@ -111,7 +85,7 @@ router.post("/login", (req, res) => {
             const refreshToken = jwt.sign(
                 { 
                 "id": user.id, 
-                "isAdmin": user.isAdmin
+                "email": user.email
                 }, 
                 process.env.REFRESH_SECRET, 
                 { expiresIn: process.env.REFRESH_EXP }
@@ -121,7 +95,8 @@ router.post("/login", (req, res) => {
             // Create secure cookie with refresh token
             res
             .cookie("jwt", refreshToken, {
-                httpOnly: false, // Accessible only by web server, set true after testing
+                httpOnly: true, // Accessible only by web server, set true after testing
+                sameSite: 'None',
                 secure: false, // Enables https ** CHANGE SECURE TO TRUE BEFORE DEPLOYMENT **
                 // sameSite: "None", // Cross-site cookie
                 maxAge: process.env.LOGIN_EXP, // Cookie expiry
