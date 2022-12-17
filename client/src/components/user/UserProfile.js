@@ -7,34 +7,37 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-const USER_URL="/users"
-
+const API_URL="/api";
 const UserProfile = () => {
-    const [ errMsg, setErrMsg ] = useState('');
-    const [ user, setUser ] = useState();
 
+    const [user, setUser] = useState();
+    const axiosPrivate = useAxiosPrivate();
+  
     useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
-
-        const getUser = async() => {
-            try{
-                const response = await axios.get(USER_URL, {
-                    signal: controller.signal
-                });
-                isMounted && setUser(response.data);
-            }catch(err){
-                console.error(err);
-            }
-
-        }
-        getUser();
-
-        return () => {
-            isMounted = false;
-            controller.abort();
-        }
+      let isMounted = true;
+      const controller = new AbortController();
+  
+      const getUser = async() => {
+          try{
+              const response = await axiosPrivate.get(API_URL, {
+                  signal: controller.signal
+              });
+              console.log(response.data);
+              isMounted && setUser(response.data);
+              //console.log("User: " + JSON.stringify(response.data));
+          }catch(err){
+              console.error(err);
+          }
+  
+      }
+      getUser();
+  
+      return () => {
+          isMounted = false;
+          controller.abort();
+      }
     }, [])
 
 
@@ -58,7 +61,6 @@ const UserProfile = () => {
                         My Profile
                     </Typography>
                     <Box sx={{ mt: 1 }}>
-                        <Typography component="p" variant="subtitle1" className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</Typography>
                         <br />
                         <Typography component="p" variant="subtitle2">
                         User Information here

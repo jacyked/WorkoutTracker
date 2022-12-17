@@ -3,7 +3,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 
 const API_URL="/api";
-const TrackWorkout = () => {
+const Exercises = () => {
 
     const [user, setUser] = useState();
     const axiosPrivate = useAxiosPrivate();
@@ -41,4 +41,4 @@ const TrackWorkout = () => {
 
 }
 
-export default TrackWorkout;
+export default Exercises;

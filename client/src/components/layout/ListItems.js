@@ -24,13 +24,13 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/track">
       <ListItemIcon>
         <SportsGymnasticsIcon />
       </ListItemIcon>
       <ListItemText primary="Track Workout" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/exercises">
       <ListItemIcon>
         <FitnessCenterIcon />
       </ListItemIcon>
@@ -44,7 +44,7 @@ export const secondaryListItems = (
     <ListSubheader component="div" inset>
       Options
     </ListSubheader>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/user">
       <ListItemIcon>
         <AccountCircleIcon />
       </ListItemIcon>
