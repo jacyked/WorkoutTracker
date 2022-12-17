@@ -13,6 +13,7 @@ import RequireAuth from "./components/auth/RequireAuth";
 import UserProfile from "./components/user/UserProfile";
 import TrackWorkout from "./components/user/TrackWorkout";
 import Exercises from './components/user/Exercises'
+import PersistLogin from "./components/auth/PersistLogin";
 
 
 function App() {
@@ -24,11 +25,13 @@ function App() {
               <Route path="register" element={<Register />}/>
               <Route path="login" element={<Login />}/>
 
+              <Route element={<PersistLogin />}>
               <Route element={<RequireAuth />}>
                 <Route path="home" element={<Home />}/>
                 <Route path="user" element={<UserProfile />}/>
                 <Route path="track" element={<TrackWorkout />} />
                 <Route path="exercises" element={<Exercises/>}/>
+              </Route>
               </Route>
 
               <Route path="*" element={<Error />}/>

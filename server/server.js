@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const users = require("./routes/users");
 const refresh = require("./routes/refresh");
 const api = require("./routes/api");
+const logout = require("./routes/logout");
 const verifyJWT = require("./middleware/validation/verifyJWT");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
@@ -44,6 +45,7 @@ mongoose
 
 app.use("/users", users);
 app.use("/refresh", refresh);
+app.use("/logout", logout);
 
 app.use(verifyJWT);
 app.use("/api", api);

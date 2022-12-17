@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useNavigate} from 'react';
 import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,6 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
 import WorkoutList from './WorkoutList';
+import useLogout from '../hooks/useLogout.js';
 
 
 
@@ -27,6 +28,9 @@ const API_URL="/api";
 const Home = () => {
   const [user, setUser] = useState();
   const axiosPrivate = useAxiosPrivate();
+  const logout = useLogout();
+
+
 
   useEffect(() => {
     let isMounted = true;
@@ -53,9 +57,6 @@ const Home = () => {
     }
   }, [])
 
-
-
-    
     return (
         <DashboardContent user = {user}/>
     );
@@ -198,7 +199,7 @@ function DashboardContent(props) {
                     height: 240,
                   }}
                 >
-                  {/*  ADD COMPONENT HERE  */}
+                  {/*  ADD COMPONENT 1 HERE  */}
                 </Paper>
               </Grid>
               {/* COMPONENT 2 */}
