@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import axios from "../../api/axios";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Link } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { AppSideBar } from '../layout/AppSideBar.js';
 
 const API_URL="/api";
 const UserProfile = () => {
@@ -44,33 +44,61 @@ const UserProfile = () => {
 
 
     return (
-        <Container component="main" maxWidth="xs">
-                    <CssBaseline />
-                    <Box sx={{marginTop: 2}}>
-                    <Button variant="text" size="small" component={Link} to="/" startIcon={<ArrowBackIosIcon />}> Back to home</Button>
-                    </Box>
-                    
-                    <Box sx={{
-                        marginTop: 6,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}>
-
-                    <Typography component="h1" variant="h5">
-                        My Profile
+        <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppSideBar />
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+          }}
+        >
+          <Toolbar />
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+              {/* COMPONENT 1 */}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                    <br />
+                    <Typography component="p" variant="subtitle2">
+                    User Profile Here
                     </Typography>
-                    <Box sx={{ mt: 1 }}>
-                        <br />
-                        <Typography component="p" variant="subtitle2">
-                        User Information here
-                        </Typography>
-                        
-                       
-                    </Box>
-                    </Box>
-                    
-                </Container>
+                  {/*  ADD COMPONENT 1 HERE  */}
+                </Paper>
+              </Grid>
+              {/* COMPONENT 2 */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 240,
+                  }}
+                >
+                  {/* ADD COMPONENT 2 */}
+                </Paper>
+              </Grid>
+            </Grid>
+
+              
+              
+          </Container>
+        </Box>
+      </Box>
     );
 
 };

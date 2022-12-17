@@ -15,8 +15,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import useLogout from '../hooks/useLogout';
 
-export const mainListItems = (
+export const MainListItems = (
   <React.Fragment>
     <ListItemButton component={Link} to="/home">
       <ListItemIcon>
@@ -39,28 +41,39 @@ export const mainListItems = (
   </React.Fragment>
 );
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Options
-    </ListSubheader>
-    <ListItemButton component={Link} to="/user">
-      <ListItemIcon>
-        <AccountCircleIcon />
-      </ListItemIcon>
-      <ListItemText primary="My Account" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <SettingsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Settings" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LogoutIcon />
-      </ListItemIcon>
-      <ListItemText primary="Log Out" />
-    </ListItemButton>
-  </React.Fragment>
-);
+export const SecondaryListItems = () => {
+  const navigate = useNavigate();
+  const logout = useLogout();
+
+  const signOut = async () => {
+    await logout();
+    navigate('/');
+
+  }
+
+  return (
+    <React.Fragment>
+      <ListSubheader component="div" inset>
+        Options
+      </ListSubheader>
+      <ListItemButton component={Link} to="/user">
+        <ListItemIcon>
+          <AccountCircleIcon />
+        </ListItemIcon>
+        <ListItemText primary="My Account" />
+      </ListItemButton>
+      <ListItemButton>
+        <ListItemIcon>
+          <SettingsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
+      </ListItemButton>
+      <ListItemButton onClick={signOut}>
+        <ListItemIcon>
+          <LogoutIcon />
+        </ListItemIcon>
+        <ListItemText primary="Log Out" />
+      </ListItemButton>
+    </React.Fragment>
+  );
+}

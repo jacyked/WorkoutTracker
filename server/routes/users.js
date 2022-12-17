@@ -93,18 +93,19 @@ router.post("/login", (req, res) => {
             // Add refresh token to db
             await User.findByIdAndUpdate(user.id, { $set: { refreshToken: refreshToken } }, { new:true })
             // Create secure cookie with refresh token
-            res
-            .cookie("jwt", refreshToken, {
-                httpOnly: true, // Accessible only by web server, set true after testing
+            const cookie = {
+              name: "jwt",
+              value: refreshToken,
+              options: {
+                httpOnly: true,
                 sameSite: 'None',
-                secure: false, // Enables https ** CHANGE SECURE TO TRUE BEFORE DEPLOYMENT **
-                // sameSite: "None", // Cross-site cookie
-                maxAge: process.env.LOGIN_EXP, // Cookie expiry
-            })
-            .status(200)
-            .json({
-                accessToken: accessToken,
-            })
+                secure: true,
+                maxAge: process.env.LOGIN_EXP
+              }
+            }
+            console.log("Refresh cookie: " + JSON.stringify(cookie));
+            res.cookie("jwt", refreshToken, {httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000})
+            res.status(200).json({accessToken: accessToken})
 
 
         } else {

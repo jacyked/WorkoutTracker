@@ -4,8 +4,10 @@ const User = require('../models/userModel')
 const handleRefreshToken = async (req, res) => {
     console.log("Refresh called");
     const cookies = req.cookies
+    console.log("Cookies: ", JSON.stringify(cookies));
     if (!cookies?.jwt) return res.sendStatus(401)
     const refreshToken = cookies.jwt
+    console.log("Refresh: " + refreshToken);
     const user = await User.findOne({ refreshToken: refreshToken })
     if (!user) return res.status(403)
     jwt.verify(
@@ -22,6 +24,7 @@ const handleRefreshToken = async (req, res) => {
                 process.env.ACCESS_SECRET, 
                 { expiresIn: process.env.ACCESS_EXP }
             )
+            console.log("New AT issued: " + accessToken);
             res.json({ accessToken })
         }
     )

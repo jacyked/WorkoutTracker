@@ -18,7 +18,7 @@ import axios from "../../api/axios";
 const LOGIN_URL = '/users/login';
 
 const Login = () => {
-    const { setAuth } = useAuth();
+    const { setAuth, setPersist, persist } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -50,7 +50,7 @@ const Login = () => {
                     withCredentials: true
                 }})
             const accessToken = response?.data.accessToken;
-            console.log(response.data);
+            console.log("AT: " + accessToken);
             setAuth({ email, password, accessToken })
             setEmail('');
             setPassword('');
@@ -74,6 +74,11 @@ const Login = () => {
     useEffect(() => {
         userRef.current.focus();
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("persist", persist);
+    },[persist])
+
 
     return (
         <React.Fragment>
@@ -140,8 +145,8 @@ const Login = () => {
                         autoComplete="current-password"
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
+                            control={<Checkbox id="persist" value="remember" color="primary" onChange={(e) => setPersist(e.target.checked)}/>}
+                            label="Trust this device"
                         />
                         <Button
                             type="submit"

@@ -1,5 +1,6 @@
-require('dotenv').config()
-const express = require('express')
+require('dotenv').config();
+const express = require('express');
+const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 //const passport = require("passport");
@@ -9,18 +10,16 @@ const api = require("./routes/api");
 const logout = require("./routes/logout");
 const verifyJWT = require("./middleware/validation/verifyJWT");
 const cors = require("cors");
+const credentials = require("./middleware/validation/credentials");
+const corsOptions = require("./config/corsOptions");
 const cookieParser = require('cookie-parser');
 
+app.use(credentials);
+app.use(cors(corsOptions));
 
-const app = express()
-app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
-// Bodyparser middleware
-app.use(
-    bodyParser.urlencoded({
-      extended: false
-    })
-);
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use(cookieParser());
 
 app.use((req, res, next) => {
