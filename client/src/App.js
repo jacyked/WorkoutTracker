@@ -11,7 +11,7 @@ import Home from "./components/user/Home";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RequireAuth from "./components/auth/RequireAuth";
 import UserProfile from "./components/user/UserProfile";
-
+import TrackWorkout from "./components/user/TrackWorkout";
 
 
 function App() {
@@ -26,6 +26,7 @@ function App() {
               <Route element={<RequireAuth />}>
                 <Route path="home" element={<Home />}/>
                 <Route path="user" element={<UserProfile />}/>
+                <Route path="track" element={<TrackWorkout />} />
               </Route>
 
               <Route path="*" element={<Error />}/>

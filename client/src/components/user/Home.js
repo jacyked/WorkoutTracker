@@ -22,7 +22,7 @@ import WorkoutList from './WorkoutList';
 
 
 
-const USER_URL="/users";
+const API_URL="/api";
 
 const Home = () => {
   const [user, setUser] = useState();
@@ -34,7 +34,7 @@ const Home = () => {
 
     const getUser = async() => {
         try{
-            const response = await axiosPrivate.get('/api', {
+            const response = await axiosPrivate.get(API_URL, {
                 signal: controller.signal
             });
             console.log(response.data);

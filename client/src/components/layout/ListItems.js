@@ -14,10 +14,11 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/home">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
