@@ -2,7 +2,7 @@ import axios from '../api/axios';
 import useAuth from './useAuth';
 
 const useRefreshToken = () => {
-    const { setAuth } = useAuth();
+    const { auth, setAuth } = useAuth();
 
     const refresh = async () => {
         const response = await axios.get('/refresh', {
@@ -10,12 +10,18 @@ const useRefreshToken = () => {
         });
         setAuth(prev => {
             console.log("Prev Auth: " + JSON.stringify(prev));
-            console.log("New AT: " + response.data.accessToken);
+            if(!response){
+                return {
+                    ...prev
+                }
+            }else{
             return {
-                ...prev,
-                accessToken: response.data.accessToken
+                    currUser: response.data.currUser,
+                    accessToken: response.data.accessToken
+                }
             }
         });
+        console.log("New Auth: " + JSON.stringify(auth));
         return response.data.accessToken;
     }
     return refresh;

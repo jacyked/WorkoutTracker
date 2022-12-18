@@ -26,7 +26,14 @@ const handleRefreshToken = async (req, res) => {
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10s' }
             );
-            res.json({ accessToken })
+            const currUser = { 
+                username: foundUser.username, 
+                date: foundUser.date, 
+                email: foundUser.email, 
+                workoutList: foundUser.workoutList, 
+                gender: foundUser.gender}
+                
+            res.json({ accessToken, currUser })
         }
     );
 }
