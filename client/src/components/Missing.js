@@ -20,7 +20,7 @@ const Missing = () => {
             alignItems: 'center',
             }}>
             <iframe src="https://giphy.com/embed/MBUtbumAgz5MAo6j7v" allowFullScreen></iframe>
-            <Typography component="h1" variant="h5"> Whoops, something broke! </Typography>
+            <p><strong>Yikes! </strong>It looks like you broke something!</p>
             
             </Box>
         </Container>

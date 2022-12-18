@@ -8,33 +8,45 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
+import useAuth from '../../hooks/useAuth';
 
-const API_URL="/user";
+const USER_URL="/user";
 const UserProfile = () => {
 
-    const [user, setUser] = useState();
+    const [thisUser, setUser] = useState();
     const axiosPrivate = useAxiosPrivate();
+    const { auth } = useAuth();
+  
+  
   
     useEffect(() => {
       let isMounted = true;
       const controller = new AbortController();
+      console.log(JSON.stringify(auth));
+      if(!auth?.currUser){
+        const getUser = async() => {
+            try{
+                //All User routes removed the signal in axios request. may want to reinstate
+                const response = await axiosPrivate.get(USER_URL, {
+                    signal: controller.signal
+                });
+                console.log("Fired: UserProfile");
+                console.log("DATA: " + JSON.stringify(response.data));
+                isMounted && setUser(response.data);
+                //setAuth({...auth.prev, curUser: response.data});
+                //console.log("User: " + JSON.stringify(response.data));
+                
+            }catch(err){
+                console.error(err);
+            }
   
-      const getUser = async() => {
-          try{
-              const response = await axiosPrivate.get(API_URL);
-              console.log("Fired: UserProfile");
-              console.log(response.data);
-              isMounted && setUser(response.data);
-              
-              //console.log("User: " + JSON.stringify(response.data));
-          }catch(err){
-              console.error(err);
-          }
-  
-      }
-      getUser();
-  
+        }
+        getUser();
+        }else{
+            setUser(auth.currUser);
+        }
       return () => {
+            console.log("cleanup, aborting userprofile axios. ");
           isMounted = false;
           controller.abort();
       }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect,} from "react";
 import useAxiosPrivate from '../hooks/useAxiosPrivate.js';
+import useAuth from '../hooks/useAuth';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -16,31 +17,38 @@ const USER_URL = "./user";
 const Home = () => {
     const [thisUser, setUser] = useState();
     const axiosPrivate = useAxiosPrivate();
-    
+    const { auth } = useAuth();
   
   
   
     useEffect(() => {
       let isMounted = true;
       const controller = new AbortController();
+      console.log(JSON.stringify(auth));
+      if(!auth?.currUser){
+        const getUser = async() => {
+            try{
+                //All User routes removed the signal in axios request. may want to reinstate
+                const response = await axiosPrivate.get(USER_URL, {
+                    signal: controller.signal
+                });
+                console.log("Fired: Home");
+                console.log("DATA: " + JSON.stringify(response.data));
+                isMounted && setUser(response.data);
+                //setAuth({...auth.prev, curUser: response.data});
+                //console.log("User: " + JSON.stringify(response.data));
+                
+            }catch(err){
+                console.error(err);
+            }
   
-      const getUser = async() => {
-          try{
-            //All User routes removed the signal in axios request. may want to reinstate
-              const response = await axiosPrivate.get(USER_URL);
-              console.log("Fired: Home");
-              console.log("DATA: " + JSON.stringify(response.data));
-              console.log("FULL RESPONSE: " + JSON.stringify(response));
-              isMounted && setUser(response.data);
-              //console.log("User: " + JSON.stringify(response.data));
-          }catch(err){
-              console.error(err);
-          }
-  
-      }
-      getUser();
-  
+        }
+        getUser();
+        }else{
+            setUser(auth.currUser);
+        }
       return () => {
+            console.log("cleanup, aborting home axios. ");
           isMounted = false;
           controller.abort();
       }

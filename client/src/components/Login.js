@@ -54,7 +54,8 @@ const Login = () => {
             console.log(JSON.stringify(response?.data));
             //console.log(JSON.stringify(response));
             const accessToken = response?.data?.accessToken;
-            setAuth({ user, pwd, accessToken });
+            const currUser = response?.data?.currUser;
+            setAuth({ user, pwd, currUser, accessToken });
             setUser('');
             setPwd('');
             navigate(from, { replace: true });
