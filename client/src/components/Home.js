@@ -14,7 +14,7 @@ import WorkoutList from './user/WorkoutList';
 const USER_URL = "./user";
 
 const Home = () => {
-    const [user, setUser] = useState();
+    const [thisUser, setUser] = useState();
     const axiosPrivate = useAxiosPrivate();
     
   
@@ -26,10 +26,11 @@ const Home = () => {
   
       const getUser = async() => {
           try{
-              const response = await axiosPrivate.get(USER_URL, {
-                  signal: controller.signal
-              });
-              console.log(response.data);
+            //All User routes removed the signal in axios request. may want to reinstate
+              const response = await axiosPrivate.get(USER_URL);
+              console.log("Fired: Home");
+              console.log("DATA: " + JSON.stringify(response.data));
+              console.log("FULL RESPONSE: " + JSON.stringify(response));
               isMounted && setUser(response.data);
               //console.log("User: " + JSON.stringify(response.data));
           }catch(err){
@@ -46,7 +47,7 @@ const Home = () => {
     }, [])
   
       return (
-          <DashboardContent user = {user}/>
+          <DashboardContent user = {thisUser}/>
       );
   }
   

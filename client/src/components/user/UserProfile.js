@@ -21,11 +21,11 @@ const UserProfile = () => {
   
       const getUser = async() => {
           try{
-              const response = await axiosPrivate.get(API_URL, {
-                  signal: controller.signal
-              });
+              const response = await axiosPrivate.get(API_URL);
+              console.log("Fired: UserProfile");
               console.log(response.data);
               isMounted && setUser(response.data);
+              
               //console.log("User: " + JSON.stringify(response.data));
           }catch(err){
               console.error(err);

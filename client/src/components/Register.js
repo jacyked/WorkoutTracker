@@ -1,177 +1,290 @@
-import { useRef, useState, useEffect } from "react";
-import axios from '../api/axios';
+import React, { useEffect, useState, useRef } from "react";
+import Button from '@mui/material/Button';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import Avatar from '@mui/material/Avatar';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "../api/axios";
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const REGISTER_URL = "/register";
 
 const Register = () => {
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, setUser] = useState('');
-    const [validName, setValidName] = useState(false);
+    const [username, setUserName] = useState('');
+    const [validUName, setValidUName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
-    const [pwd, setPwd] = useState('');
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
+
+    const [password, setPassword] = useState('');
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
 
-    const [matchPwd, setMatchPwd] = useState('');
+    const [matchPassword, setMatchPassword] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
-
-    useEffect(() => {
-        setValidName(USER_REGEX.test(user));
-    }, [user])
-
-    useEffect(() => {
-        setValidPwd(PWD_REGEX.test(pwd));
-        setValidMatch(pwd === matchPwd);
-    }, [pwd, matchPwd])
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [user, pwd, matchPwd])
+    function Copyright(props) {
+        return (
+          <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © Jacyk Development'}
+            {new Date().getFullYear()}
+            {'.'}
+          </Typography>
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // if button enabled with JS hack
-        const v1 = USER_REGEX.test(user);
-        const v2 = PWD_REGEX.test(pwd);
-        if (!v1 || !v2) {
-            setErrMsg("Invalid Entry");
+        
+        const v1 = USER_REGEX.test(username);
+        const v2 = PWD_REGEX.test(password);
+        const v3 = EMAIL_REGEX.test(email);
+        const v4 = (password === matchPassword);
+        if(!v1 || !v2 || !v3 || !v4){
+            setErrMsg("Invalid Submission");
             return;
         }
-        try {
-            const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ user, pwd }),
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
-                }
-            );
-            // TODO: remove console.logs before deployment
-            console.log(JSON.stringify(response?.data));
-            //console.log(JSON.stringify(response))
-            setSuccess(true);
-            //clear state and controlled inputs
-            setUser('');
-            setPwd('');
-            setMatchPwd('');
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            } else if (err.response?.status === 409) {
-                setErrMsg('Username Taken');
-            } else {
-                setErrMsg('Registration Failed')
+        try{
+            const response = await axios.post(REGISTER_URL, JSON.stringify({"user": username, email,"pwd": password}),
+            {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
             }
+            );
+            //Add account activation process
+            setSuccess(true);
+            setUserName('');
+            setPassword('');
+            setEmail('');
+            setMatchPassword('');
+            setErrMsg('');
+
+        }catch(err){
+            if(!err?.response) {
+                setErrMsg("No Server Reponse");
+            }
+            else if(err.response?.status === 409){
+                setErrMsg(err.response.data.errMsg);
+            }
+            else{
+                setErrMsg("Registration Failed")
+            };
             errRef.current.focus();
         }
+
     }
 
+    //const { errors } = errMsg;
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+
+    useEffect(() => {
+        const result = USER_REGEX.test(username);
+        setValidUName(result);
+    }, [username]);
+
+    useEffect(() => {
+        const result = EMAIL_REGEX.test(email);
+        setValidEmail(result);
+    }, [email]);
+
+    useEffect(() => {
+        const result = PWD_REGEX.test(password);
+        setValidPwd(result);
+        const match = password === matchPassword;
+        setValidMatch(match);
+    }, [password, matchPassword]);
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, email, password, matchPassword]);
+        
     return (
-        <>
+        <React.Fragment>
             {success ? (
-                <section>
-                    <h1>Success!</h1>
-                    <p>
-                        <a href="#">Sign In</a>
-                    </p>
-                </section>
+                <Container component="main" maxWidth="xs" >
+                    <CssBaseline />
+                    <Box sx={{marginTop: 2}}>
+                        <Button variant="text" size="small" component={Link} to="/linkpage" startIcon={<ArrowBackIosIcon />}> Back to home</Button>
+                    </Box>
+                    <Box sx={{
+                        marginTop: 6,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}>
+                        <Typography component="p" variant="subtitle1"> Succesfully registered! </Typography>
+                        <br />
+                        <Button component={Link} to="/login">Log In</Button>
+                    </Box>
+                </Container>
             ) : (
-                <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Register</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">
-                            Username:
-                            
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
-                            required
-                            aria-invalid={validName ? "false" : "true"}
-                            aria-describedby="uidnote"
-                            onFocus={() => setUserFocus(true)}
-                            onBlur={() => setUserFocus(false)}
+                <Container component="main" maxWidth="xs" >
+                    <CssBaseline />
+                    <Box sx={{marginTop: 2}}>
+                        <Button variant="text" size="small" component={Link} to="/linkpage" startIcon={<ArrowBackIosIcon />}> Back to home</Button>
+                    </Box>
+                    <Box sx={{
+                        marginTop: 6,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}>
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <FitnessCenterIcon />
+                        </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Register
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <Typography component="p" variant="subtitle1" ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</Typography>
+                        
+                        <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                {validUName ? <CheckCircleIcon/> : (!username ? "" : <CancelIcon/>)}
+                                </InputAdornment>
+                            ),
+                            }}
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        ref={userRef}
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
+                        aria-invalid={validUName ? "false" : "true"}
+                        aria-describedby="uidnote"
+                        onChange={(e) => setUserName(e.target.value)}
+                        onFocus={() => setUserFocus(true)}
+                        onBlur={() => setUserFocus(false)}
+                        autoFocus
                         />
-                        <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
-                            
-                            4 to 24 characters.<br />
-                            Must begin with a letter.<br />
-                            Letters, numbers, underscores, hyphens allowed.
-                        </p>
-
-
-                        <label htmlFor="password">
-                            Password:
-             
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
-                            required
-                            aria-invalid={validPwd ? "false" : "true"}
-                            aria-describedby="pwdnote"
-                            onFocus={() => setPwdFocus(true)}
-                            onBlur={() => setPwdFocus(false)}
+                        
+                        <TextField
+                            InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    {validEmail ? <CheckCircleIcon/> : (!email ? "" : <CancelIcon/>)}
+                                  </InputAdornment>
+                                ),
+                            }}                        
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        aria-invalid={validEmail ? "false" : "true"}
+                        aria-describedby="emnote"
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={() => setEmailFocus(true)}
+                        onBlur={() => setEmailFocus(false)}
                         />
-                        <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                            
-                            8 to 24 characters.<br />
-                            Must include uppercase and lowercase letters, a number and a special character.<br />
-                            Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
-                        </p>
-
-
-                        <label htmlFor="confirm_pwd">
-                            Confirm Password:
-               
-                        </label>
-                        <input
-                            type="password"
-                            id="confirm_pwd"
-                            onChange={(e) => setMatchPwd(e.target.value)}
-                            value={matchPwd}
-                            required
-                            aria-invalid={validMatch ? "false" : "true"}
-                            aria-describedby="confirmnote"
-                            onFocus={() => setMatchFocus(true)}
-                            onBlur={() => setMatchFocus(false)}
+                        <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                {validPwd ? <CheckCircleIcon/> : (!password ? "" : <CancelIcon/>)}
+                                </InputAdornment>
+                            ),
+                        }}
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        aria-invalid={validPwd ? "false" : "true"}
+                        aria-describedby="pwdnote"
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setPwdFocus(true)}
+                        onBlur={() => setPwdFocus(false)}
                         />
-                        <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                         
-                            Must match the first password input field.
-                        </p>
-
-                        <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
-                    </form>
-                    <p>
-                        Already registered?<br />
-                        <span className="line">
-                            <Link to="/">Sign In</Link>
-                        </span>
-                    </p>
-                </section>
-            )}
-        </>
+                        <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                {!matchPassword ? "" : (validMatch ? <CheckCircleIcon/> : <CancelIcon/>)}
+                                </InputAdornment>
+                            ),
+                        }}
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password2"
+                        label="Confirm Password"
+                        type="password"
+                        id="password2"
+                        aria-invalid={validMatch ? "false" : "true"}
+                        aria-describedby="mpnote"
+                        onChange={(e) => setMatchPassword(e.target.value)}
+                        onFocus={() => setMatchFocus(true)}
+                        onBlur={() => setMatchFocus(false)}
+                        />
+                        <Typography component="p" variant="subtitle1" id="uidnote" className={userFocus && username && !validUName ? "instructions" : "offscreen"}>
+                            4 to 24 characters. <br />
+                            Must begin with a letter. <br />
+                            Letters, numbers, underscores, hyphens allowed. 
+                        </Typography>
+                        <Typography component="p" variant="subtitle1" id="pwdnote" className={pwdFocus && password && !validPwd ? "instructions" : "offscreen"}>
+                            8 to 24 characters. <br />
+                            Must include at least one lowercase, uppercase, number, and symbol. <br />
+                            Only non-sensitive symbols allowed.
+                        </Typography>
+                        <Typography component="p" variant="subtitle1" id="emnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                            Must be a valid email format.
+                        </Typography>
+                        <Typography component="p" variant="subtitle1" id="mpnote" className={matchFocus && matchPassword && !validMatch ? "instructions" : "offscreen"}>
+                            Passwords must match.
+                        </Typography>
+                        <Button
+                            disabled={!validUName || !validEmail || !validPwd || !validMatch ? true : false}
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}>
+                            Sign Up
+                        </Button>
+                        <Grid container>
+                        <Grid item>
+                            <Typography component={Link} to="/login" variant="body2">
+                            {"Already have an account? Log In"}
+                            </Typography>
+                        </Grid>
+                        </Grid>
+                    </Box>
+                    </Box>
+                    <Copyright sx={{ mt: 8, mb: 4 }} />
+                </Container>)
+            }
+        </React.Fragment>
     )
 }
 

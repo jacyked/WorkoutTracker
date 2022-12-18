@@ -8,18 +8,23 @@ import TableRow from '@mui/material/TableRow';
 import { Typography } from '@mui/material';
 
 const WorkoutList = (props) => {
-
-    const list = props?.workoutList;
-    if(!list || (list.length === 0))
-        list[0] = { id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'};
-    else{
-        list.forEach((row) =>{
-            row = {
-                id: row.id,
-                targets: row.targets,
-                length: row.length
-            }
-        });
+    let list = [];
+    try{
+        list = props?.workoutList;
+        if(!list)
+            list.push({ id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'});
+        else{
+            list.forEach((row) =>{
+                row = {
+                    id: row.id,
+                    targets: row.targets,
+                    length: row.length
+                }
+            });
+        }
+    }catch(err){
+        list = []
+        list.push({ id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'});
     }
 
 
