@@ -1,4 +1,4 @@
-#Workout Tracker
+# Workout Tracker
 
 This project aims to be a Progressive Web App for tracking workouts and exercises.
 
