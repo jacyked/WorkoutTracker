@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
 
 
-const USER_URL="/user";
+const USER_URL="/exercises";
 const Exercises = () => {
 
     const [thisUser, setUser] = useState();

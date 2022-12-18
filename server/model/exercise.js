@@ -1,4 +1,4 @@
-const mongoose = require(mongoose);
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
@@ -19,6 +19,7 @@ const exerciseSchema = new Schema({
     altName:{
         type: String,
         required: false,
+        default: null
     },
     aka: {
         type: Array,

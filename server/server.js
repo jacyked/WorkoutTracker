@@ -36,6 +36,7 @@ app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJWT);
 app.use('/user', require('./routes/api/user'));
+app.use('/exercises', require('./routes/api/exercises'));
 
 //Send static dir files
 app.all('*', (req, res) => {
