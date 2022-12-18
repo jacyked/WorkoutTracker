@@ -9,7 +9,7 @@ import { Typography } from '@mui/material';
 
 const WorkoutList = (props) => {
 
-    const list = props.workoutList;
+    const list = props?.workoutList;
     if(!list || (list.length === 0))
         list[0] = { id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'};
     else{

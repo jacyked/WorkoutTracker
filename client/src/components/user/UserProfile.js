@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
 
-const API_URL="/api";
+const API_URL="/user";
 const UserProfile = () => {
 
     const [user, setUser] = useState();

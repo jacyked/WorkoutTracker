@@ -1,57 +1,57 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-//const passport = require("passport");
-const users = require("./routes/users");
-const refresh = require("./routes/refresh");
-const api = require("./routes/api");
-const logout = require("./routes/logout");
-const verifyJWT = require("./middleware/validation/verifyJWT");
-const cors = require("cors");
-const credentials = require("./middleware/validation/credentials");
-const corsOptions = require("./config/corsOptions");
+const path = require('path');
+const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+const { logger } = require('./middleware/logEvents');
+const errorHandler = require('./middleware/errorHandler');
+const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
-
-app.use(credentials);
-app.use(cors(corsOptions));
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-app.use(cookieParser());
-
-app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
+const credentials = require('./middleware/credentials');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn');
+const PORT = process.env.PORT || 8080;
 
 // Connect to MongoDB
-mongoose
-  .connect(
-    process.env.MONGO_URI,
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
+connectDB();
 
-//Passport middleware
-//app.use(passport.initialize());
-// Passport config
-//require("./config/passport")(passport);
-// Routes
+// Middleware
+app.use(logger);
+app.use(credentials);
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cookieParser());
 
-app.use("/users", users);
-app.use("/refresh", refresh);
-app.use("/logout", logout);
+//serve static files
+app.use('/', express.static(path.join(__dirname, '/public')));
+
+// routes
+app.use('/', require('./routes/root'));
+app.use('/register', require('./routes/register'));
+app.use('/auth', require('./routes/auth'));
+app.use('/refresh', require('./routes/refresh'));
+app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJWT);
-app.use("/api", api);
+app.use('/user', require('./routes/api/user'));
 
-const port = process.env.PORT;
-
-app.listen(port, () => {
-    console.log('Listening on port: ' + port);
+//Send static dir files
+app.all('*', (req, res) => {
+    res.status(404);
+    if (req.accepts('html')) {
+        res.sendFile(path.join(__dirname, 'views', '404.html'));
+    } else if (req.accepts('json')) {
+        res.json({ "error": "404 Not Found" });
+    } else {
+        res.type('txt').send("404 Not Found");
+    }
 });
 
+app.use(errorHandler);
+
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});

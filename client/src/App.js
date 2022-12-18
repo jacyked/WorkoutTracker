@@ -1,42 +1,44 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import './App.css';
-import Navbar from "./components/layout/Navbar";
-import Landing from "./components/layout/Landing";
-import Layout from "./components/Layout";
-import Register from "./components/auth/Register";
-import Login from "./components/auth/Login";
-import Error from "./components/Error";
-import Home from "./components/user/Home";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import RequireAuth from "./components/auth/RequireAuth";
-import UserProfile from "./components/user/UserProfile";
-import TrackWorkout from "./components/user/TrackWorkout";
-import Exercises from './components/user/Exercises'
-import PersistLogin from "./components/auth/PersistLogin";
+import Register from './components/Register';
+import Login from './components/Login';
+import Home from './components/Home';
+import Layout from './components/Layout';
+import Missing from './components/Missing';
+import LinkPage from './components/LinkPage';
+import RequireAuth from './components/RequireAuth';
+import PersistLogin from './components/PersistLogin';
+import { Routes, Route } from 'react-router-dom';
+
+import UserProfile from './components/user/UserProfile';
+import TrackWorkout from './components/user/TrackWorkout';
+import Exercises from './components/user/Exercises';
 
 
 function App() {
+
   return (
-          <Routes>
-            <Route exact path="/" element ={<Layout />}>
-              {/* Public Routes */}
-              <Route path="/" element={<Landing />}/>
-              <Route path="register" element={<Register />}/>
-              <Route path="login" element={<Login />}/>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* public routes */}
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="linkpage" element={<LinkPage />} />
+        
 
-              <Route element={<PersistLogin />}>
-              <Route element={<RequireAuth />}>
-                <Route path="home" element={<Home />}/>
-                <Route path="user" element={<UserProfile />}/>
-                <Route path="track" element={<TrackWorkout />} />
-                <Route path="exercises" element={<Exercises/>}/>
-              </Route>
-              </Route>
+        {/* we want to protect these routes */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Home />} />
+            <Route path="user" element={<UserProfile />}/>
+            <Route path="track" element={<TrackWorkout />} />
+            <Route path="exercises" element={<Exercises/>}/>
+            
+          </Route>
+        </Route>
 
-              <Route path="*" element={<Error />}/>
-            </Route>
-          </Routes>
+        {/* catch all */}
+        <Route path="*" element={<Missing />} />
+      </Route>
+    </Routes>
   );
 }
 

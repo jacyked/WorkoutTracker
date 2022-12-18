@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
 
 
-const API_URL="/api";
+const API_URL="/user";
 const TrackWorkout = () => {
 
     const [user, setUser] = useState();
