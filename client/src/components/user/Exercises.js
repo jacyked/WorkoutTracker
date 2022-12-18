@@ -13,10 +13,10 @@ import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
 
 
-const USER_URL="/exercises";
+const ALLEX_URL="/exercises";
 const Exercises = () => {
 
-    const [thisUser, setUser] = useState();
+    const [exList, setExList] = useState();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
   
@@ -24,16 +24,15 @@ const Exercises = () => {
       let isMounted = true;
       const controller = new AbortController();
       console.log(JSON.stringify(auth));
-      if(!auth?.currUser){
-        const getUser = async() => {
+        const getAll = async() => {
             try{
                 //All User routes removed the signal in axios request. may want to reinstate
-                const response = await axiosPrivate.get(USER_URL, {
+                const response = await axiosPrivate.get(ALLEX_URL, {
                     signal: controller.signal
                 });
                 console.log("Fired: Exercises");
                 console.log("DATA: " + JSON.stringify(response.data));
-                isMounted && setUser(response.data);
+                isMounted && setExList(response.data);
                 //setAuth({...auth.prev, curUser: response.data});
                 //console.log("User: " + JSON.stringify(response.data));
                 
@@ -42,10 +41,8 @@ const Exercises = () => {
             }
   
         }
-        getUser();
-        }else{
-            setUser(auth.currUser);
-        }
+        getAll();
+
       return () => {
             console.log("cleanup, aborting exercises axios. ");
           isMounted = false;
