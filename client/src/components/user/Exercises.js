@@ -180,8 +180,8 @@ const Exercises = () => {
                         <Table size="small" stickyHeader aria-label="sticky table">
                           <TableHead>
                             <TableRow>
-                              <TableCell align='left' style={{minWidth: 100}}>Name</TableCell>
-                              <TableCell align='left' style={{minWidth: 50}}>                                
+                              <TableCell align='left' style={{minWidth: 100, paddingRight: 0.5}}>Name</TableCell>
+                              <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>                                
                                 <InputLabel variant="standard" htmlFor="maintarget">
                                   Target
                                 </InputLabel>
@@ -191,7 +191,7 @@ const Exercises = () => {
                                   ))}
                                 </NativeSelect>
                                 </TableCell>
-                              <TableCell align=';eft' style={{minWidth: 50}}>
+                              <TableCell align=';eft' style={{minWidth: 50, padding: 0.5}}>
                                 <InputLabel variant="standard" htmlFor="equipment">
                                   Equipment
                                 </InputLabel>
@@ -201,7 +201,7 @@ const Exercises = () => {
                                   ))}
                                 </NativeSelect>
                               </TableCell>
-                              <TableCell align='right' style={{minWidth: 50}}>Rating</TableCell>
+                              <TableCell align='right' style={{minWidth: 50, paddingLeft: 0.5}}>Rating</TableCell>
                             </TableRow>
                           </TableHead>
                           
@@ -216,10 +216,10 @@ const Exercises = () => {
                           <TableBody>
                           {exList.map((row) => (
                             <TableRow key={row._id}>
-                              <TableCell fontSize="2pt" align='left' style={{minWidth: 100}}>{row.fullName}</TableCell>
-                              <TableCell fontSize='2' align='left' style={{minWidth: 50}}>{row.mainMuscleName}</TableCell>
-                              <TableCell fontSize='2' align='left' style={{minWidth: 50}}>{row.equipmentTypes.toString()}</TableCell>
-                              <TableCell align='right' style={{minWidth: 50}}>
+                              <TableCell align='left' style={{minWidth: 100, paddingRight: 0.5}}>{row.fullName}</TableCell>
+                              <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.mainMuscleName}</TableCell>
+                              <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.equipmentTypes.toString()}</TableCell>
+                              <TableCell align='right' style={{minWidth: 50, paddingLeft: 0.5}}>
                                 <Button sx={{padding: 1, minHeight: 0, minWidth: 0,}} variant="outlined" color={(parseFloat(row.rating) <= 0)?"secondary":(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":(parseFloat(row.rating) <= 10)?"success":"secondary" }>{((parseFloat(row.rating) >0) && ((parseFloat(row.rating) <= 10)))?parseFloat(row.rating):"N/A"}</Button>
                                   </TableCell>
                             </TableRow>
