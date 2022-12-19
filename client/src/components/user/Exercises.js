@@ -133,6 +133,7 @@ const Exercises = () => {
                               <TableCell>Rating</TableCell>
                             </TableRow>
                           </TableHead>
+                          {/* Move isLoading to here */}
                           <TableBody>
                           {exList.map((row) => (
                             <TableRow key={row?._id}>
