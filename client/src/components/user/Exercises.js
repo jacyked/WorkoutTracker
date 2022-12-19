@@ -86,12 +86,17 @@ const Exercises = () => {
         const response = await axiosPrivate.get(ALLEX_URL, {
             params: {
               limit: OFFSET,
-              skip: (count * OFFSET)
+              skip: (count * OFFSET),
+              targetFilter: targetFilter,
+              equipFilter: equipFilter
             }
         });
         //console.log("Fired: Load More");
         //console.log("DATA: " + JSON.stringify(response.data));
         const list = Array.from(response.data);
+        list.forEach((i) => {
+          console.log(i.fullName)})
+        setExList(list)
         setExList(exList.concat(list));
         setIsLoading(false);
         setCount(count + 1);
@@ -102,10 +107,43 @@ const Exercises = () => {
       }
 
     }
+    const addFilter = async () => {
+      setCount(1)
+      setIsLoading(true);
+      try{
+        const response = await axiosPrivate.get(ALLEX_URL, {
+            params: {
+              limit: OFFSET,
+              skip: 0,
+              targetFilter: targetFilter,
+              equipFilter: equipFilter
+            }
+        });
+        //console.log("Fired: Load More");
+        //console.log("DATA: " + JSON.stringify(response.data));
+        const list = Array.from(response.data);
+        list.forEach((i) => {
+          console.log(i.fullName)})
+        setExList(list);
+        setIsLoading(false);
+
+        
+      }catch(err){
+          console.error(err);
+      }
+
+    }
+
+    useEffect(() => {
+      
+      addFilter();
+    }, [targetFilter, equipFilter])
 
     useEffect(() => {
       setRef.current.scrollIntoView({  block: 'start' })
     }, [count])
+
+
 
 
     return(
@@ -180,7 +218,7 @@ const Exercises = () => {
                               <TableCell>{row.mainMuscleName}</TableCell>
                               <TableCell>{row.equipmentTypes.toString()}</TableCell>
                               <TableCell >
-                                <Button variant="outlined" color={(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":"success" }>{parseFloat(row.rating)}</Button>
+                                <Button variant="outlined" color={(parseFloat(row.rating) <= 0)?"secondary":(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":(parseFloat(row.rating) <= 10)?"success":"secondary" }>{((parseFloat(row.rating) >0) && ((parseFloat(row.rating) <= 10)))?parseFloat(row.rating):"N/A"}</Button>
                                   </TableCell>
                             </TableRow>
                           ))}
