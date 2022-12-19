@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { AppSideBar } from './layout/AppSideBar.js';
+import { Typography } from '@mui/material';
 
 import WorkoutList from './user/WorkoutList';
 
@@ -89,6 +90,12 @@ const Home = () => {
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
+                  {/* Workout List: */}
+                  <Grid item xs={12}>
+                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <WorkoutList workoutList={workoutList}/>
+                  </Paper>
+                </Grid>
                 {/* COMPONENT 1 */}
                 <Grid item xs={12} md={8} lg={9}>
                   <Paper
@@ -99,6 +106,7 @@ const Home = () => {
                       height: 240,
                     }}
                   >
+                    <Typography component="h4" variant="h5">Widget Here</Typography>
                     {/*  ADD COMPONENT 1 HERE  */}
                   </Paper>
                 </Grid>
@@ -112,13 +120,8 @@ const Home = () => {
                       height: 240,
                     }}
                   >
+                    <Typography component="h4" variant="h5">Widget here</Typography>
                     {/* ADD COMPONENT 2 */}
-                  </Paper>
-                </Grid>
-                {/* Workout List: */}
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <WorkoutList workoutList={workoutList}/>
                   </Paper>
                 </Grid>
               </Grid>

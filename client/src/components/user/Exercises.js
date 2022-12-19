@@ -143,7 +143,12 @@ const Exercises = () => {
       setRef.current.scrollIntoView({  block: 'start' })
     }, [count])
 
-
+    const columns = [
+      {id: 'fullName', label: 'Name', minWidth: 100},
+      {id: 'target', label: 'Target', minWidth: 100},
+      {id: 'equipment', label: 'Equipment', minWidth: 100},
+      {id: 'rating', label: 'Rating', minWidth: 50, align: 'right'}
+    ]
 
 
     return(
@@ -165,23 +170,20 @@ const Exercises = () => {
             >
               <Toolbar />
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                  {/* COMPONENT 1 */}
-                  <Grid item xs={12} md={8} lg={9}>
                     <Paper
                       sx={{
-                        p: 2,
+                        p: {xs: 'none', md: 1, lg: 2},
                         display: 'flex',
                         flexDirection: 'column',
                       }}
                     >
-                        <Table size="small">
+                        <Table size="small" stickyHeader aria-label="sticky table">
                           <TableHead>
                             <TableRow>
-                              <TableCell>Exercise</TableCell>
-                              <TableCell>                                
+                              <TableCell align='left' style={{minWidth: 100}}>Name</TableCell>
+                              <TableCell align='left' style={{minWidth: 50}}>                                
                                 <InputLabel variant="standard" htmlFor="maintarget">
-                                  Main Target
+                                  Target
                                 </InputLabel>
                                 <NativeSelect defaultValue={'All'} inputProps={{name: 'maintarget', id: 'maintarget',}} onChange={(e) => setTarget(e.target.value)}>
                                   {muscleTypes.map((row) => (
@@ -189,7 +191,7 @@ const Exercises = () => {
                                   ))}
                                 </NativeSelect>
                                 </TableCell>
-                              <TableCell>
+                              <TableCell align=';eft' style={{minWidth: 50}}>
                                 <InputLabel variant="standard" htmlFor="equipment">
                                   Equipment
                                 </InputLabel>
@@ -199,7 +201,7 @@ const Exercises = () => {
                                   ))}
                                 </NativeSelect>
                               </TableCell>
-                              <TableCell>Rating</TableCell>
+                              <TableCell align='right' style={{minWidth: 50}}>Rating</TableCell>
                             </TableRow>
                           </TableHead>
                           
@@ -214,11 +216,11 @@ const Exercises = () => {
                           <TableBody>
                           {exList.map((row) => (
                             <TableRow key={row._id}>
-                              <TableCell>{row.fullName}</TableCell>
-                              <TableCell>{row.mainMuscleName}</TableCell>
-                              <TableCell>{row.equipmentTypes.toString()}</TableCell>
-                              <TableCell >
-                                <Button variant="outlined" color={(parseFloat(row.rating) <= 0)?"secondary":(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":(parseFloat(row.rating) <= 10)?"success":"secondary" }>{((parseFloat(row.rating) >0) && ((parseFloat(row.rating) <= 10)))?parseFloat(row.rating):"N/A"}</Button>
+                              <TableCell fontSize="2pt" align='left' style={{minWidth: 100}}>{row.fullName}</TableCell>
+                              <TableCell fontSize='2' align='left' style={{minWidth: 50}}>{row.mainMuscleName}</TableCell>
+                              <TableCell fontSize='2' align='left' style={{minWidth: 50}}>{row.equipmentTypes.toString()}</TableCell>
+                              <TableCell align='right' style={{minWidth: 50}}>
+                                <Button sx={{padding: 1, minHeight: 0, minWidth: 0,}} variant="outlined" color={(parseFloat(row.rating) <= 0)?"secondary":(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":(parseFloat(row.rating) <= 10)?"success":"secondary" }>{((parseFloat(row.rating) >0) && ((parseFloat(row.rating) <= 10)))?parseFloat(row.rating):"N/A"}</Button>
                                   </TableCell>
                             </TableRow>
                           ))}
@@ -226,8 +228,7 @@ const Exercises = () => {
                         </Table>
                         <Button onClick={loadMore} ref={setRef}>See More</Button>
                     </Paper>
-                  </Grid>
-                </Grid>
+                  
 
                   
                   

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -12,27 +11,29 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
+import { Typography } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 
-export const MainListItems = (
+export const MainListItems = () => (
   <React.Fragment>
-    <ListItemButton component={Link} to="/">
+    <MenuItem component={Link} to="/">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton component={Link} to="/track">
+    </MenuItem>
+    <MenuItem component={Link} to="/track">
       <ListItemIcon>
         <SportsGymnasticsIcon />
       </ListItemIcon>
       <ListItemText primary="Track Workout" />
-    </ListItemButton>
-    <ListItemButton component={Link} to="/exercises">
+    </MenuItem>
+    <MenuItem component={Link} to="/exercises">
       <ListItemIcon>
         <FitnessCenterIcon />
       </ListItemIcon>
       <ListItemText primary="All Exercises" />
-    </ListItemButton>
+    </MenuItem>
   </React.Fragment>
 );
 
@@ -48,27 +49,24 @@ export const SecondaryListItems = () => {
 
   return (
     <React.Fragment>
-      <ListSubheader component="div" inset>
-        Options
-      </ListSubheader>
-      <ListItemButton component={Link} to="/user">
+      <MenuItem component={Link} to="/user">
         <ListItemIcon>
           <AccountCircleIcon />
         </ListItemIcon>
-        <ListItemText primary="My Account" />
-      </ListItemButton>
-      <ListItemButton>
+        <Typography textAlign="center">My Profile</Typography>
+      </MenuItem>
+      <MenuItem>
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItemButton>
-      <ListItemButton onClick={signOut}>
+        <Typography textAlign="center">Settings</Typography>
+      </MenuItem>
+      <MenuItem onClick={signOut}>
         <ListItemIcon>
           <LogoutIcon />
         </ListItemIcon>
-        <ListItemText primary="Log Out" />
-      </ListItemButton>
+        <Typography textAlign="center">Log Out</Typography>
+      </MenuItem>
     </React.Fragment>
   );
 }
