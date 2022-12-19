@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from '../../hooks/useAuth';
 
@@ -15,22 +15,26 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
 import { AppSideBar } from '../layout/AppSideBar.js';
 
 const OFFSET = 10;
 const ALLEX_URL="/exercises";
 const Exercises = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [exList, setExList] = useState({id: 1, fullName: "test", mainMuscleName: "Bicep", rating: "9/10"});
+    const [exList, setExList] = useState([{id: 1, fullName: "test", mainMuscleName: "Bicep", rating: "9/10"}]);
     const [count, setCount] = useState(1);
     const axiosPrivate = useAxiosPrivate();
+    const setRef = useRef();
     const { auth } = useAuth();
   
     useEffect(() => {
-      let isMounted = true;
-      const controller = new AbortController();
-      //console.log(JSON.stringify(auth));
-      const getAll = async() => {
+  
+        let isMounted = true;
+        const controller = new AbortController();
+        if(exList.length === 1){
+        //console.log(JSON.stringify(auth));
+        const getAll = async() => {
             try{
                 //All User routes removed the signal in axios request. may want to reinstate
                 const response = await axiosPrivate.get(ALLEX_URL, {
@@ -40,12 +44,12 @@ const Exercises = () => {
                       skip: 0
                     }
                 });
-                console.log("Fired: Exercises");
+                //console.log("Fired: Exercises");
                 //console.log("DATA: " + JSON.stringify(response.data));
                 //const test = JSON.parse(response.data);
                 //console.log("Parsed: " + test);
 
-                response.data.forEach(e => console.log("Element " + JSON.stringify(e)))
+                //response.data.forEach(e => console.log("Element " + JSON.stringify(e)))
                 //response.data[0].forEach(console.log("ForEach sent"))
                 const list = Array.from(response.data);
                 isMounted && setExList(list);
@@ -59,6 +63,8 @@ const Exercises = () => {
   
         }
         getAll();
+      }
+      setRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         //setIsLoading(false);
       return () => {
             console.log("cleanup, aborting exercises axios. ");
@@ -68,6 +74,7 @@ const Exercises = () => {
     }, [])
 
     const loadMore = async () => {
+      
       setIsLoading(true);
       try{
         const response = await axiosPrivate.get(ALLEX_URL, {
@@ -77,25 +84,26 @@ const Exercises = () => {
             }
         });
         setCount(count + 1);
-        console.log("Fired: Load More");
-        console.log("DATA: " + JSON.stringify(response.data));
+        //console.log("Fired: Load More");
+        //console.log("DATA: " + JSON.stringify(response.data));
         const list = Array.from(response.data);
         setExList(exList.concat(list));
         setIsLoading(false);
 
         
-    }catch(err){
-        console.error(err);
-    }
+      }catch(err){
+          console.error(err);
+      }
 
     }
+
+    useEffect(() => {
+      setRef.current.scrollIntoView({  block: 'start' })
+    })
+
 
     return(
         <React.Fragment>
-          {isLoading ? (
-            <p>Loading...</p>
-          )
-                    : (
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppSideBar />
@@ -123,7 +131,6 @@ const Exercises = () => {
                         flexDirection: 'column',
                       }}
                     >
-                        <Typography component="h4" variant="h5">Top Exercises</Typography>
                         <Table size="small">
                           <TableHead>
                             <TableRow>
@@ -133,19 +140,27 @@ const Exercises = () => {
                               <TableCell>Rating</TableCell>
                             </TableRow>
                           </TableHead>
-                          {/* Move isLoading to here */}
+                          
+                          {isLoading ? (
+                            <TableRow>
+                              <TableCell colSpan={4}>
+                              < LinearProgress />
+                              </TableCell>
+                            </TableRow>
+                          )
+                          : (
                           <TableBody>
                           {exList.map((row) => (
-                            <TableRow key={row?._id}>
-                              <TableCell>{row?.fullName}</TableCell>
-                              <TableCell>{row?.mainMuscleName}</TableCell>
-                              <TableCell>{row?.equipmentTypes.toString()}</TableCell>
-                              <TableCell>{row?.rating}</TableCell>
+                            <TableRow key={row._id}>
+                              <TableCell>{row.fullName}</TableCell>
+                              <TableCell>{row.mainMuscleName}</TableCell>
+                              <TableCell>{row.equipmentTypes.toString()}</TableCell>
+                              <TableCell >{row.rating}</TableCell>
                             </TableRow>
                           ))}
-                          </TableBody>
+                          </TableBody> )}
                         </Table>
-                        <Button onClick={loadMore}>See More</Button>
+                        <Button onClick={loadMore} ref={setRef}>See More</Button>
                     </Paper>
                   </Grid>
                 </Grid>
@@ -154,7 +169,7 @@ const Exercises = () => {
                   
               </Container>
             </Box>
-          </Box> )}
+          </Box> 
         </React.Fragment>
     );
 
