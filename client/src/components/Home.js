@@ -73,7 +73,7 @@ const Home = () => {
       
         <Box sx={{ display: 'flex' }}>
           <CssBaseline />
-          <AppSideBar />
+          <AppSideBar title="Dashboard" />
           <Box
             component="main"
             sx={{

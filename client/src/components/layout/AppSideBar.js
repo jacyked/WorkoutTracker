@@ -13,7 +13,7 @@ import { styled } from '@mui/material/styles';
 
 
 
-export const AppSideBar = () => { 
+export const AppSideBar = (props) => { 
 
     const drawerWidth = 240;
 
@@ -95,7 +95,7 @@ export const AppSideBar = () => {
                 noWrap
                 sx={{ flexGrow: 1 }}
             >
-                Dashboard
+                {props.title}
             </Typography>
             </Toolbar>
         </AppBar>

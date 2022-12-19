@@ -58,7 +58,7 @@ const TrackWorkout = () => {
     return(
         <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppSideBar />
+        <AppSideBar title="Track a Workout"/>
         <Box
           component="main"
           sx={{

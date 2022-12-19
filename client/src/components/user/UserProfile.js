@@ -58,7 +58,7 @@ const UserProfile = () => {
     return (
         <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppSideBar />
+        <AppSideBar title="My Account"/>
         <Box
           component="main"
           sx={{

@@ -17,6 +17,10 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import { AppSideBar } from '../layout/AppSideBar.js';
+import { muscleTypes, equipmentTypes } from "../layout/ExerciseResources";
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
 
 const OFFSET = 10;
 const ALLEX_URL="/exercises";
@@ -24,6 +28,8 @@ const Exercises = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [exList, setExList] = useState([{id: 1, fullName: "test", mainMuscleName: "Bicep", rating: "9/10"}]);
     const [count, setCount] = useState(1);
+    const [targetFilter, setTarget] = useState();
+    const [equipFilter, setEquip] = useState();
     const axiosPrivate = useAxiosPrivate();
     const setRef = useRef();
     const { auth } = useAuth();
@@ -83,12 +89,12 @@ const Exercises = () => {
               skip: (count * OFFSET)
             }
         });
-        setCount(count + 1);
         //console.log("Fired: Load More");
         //console.log("DATA: " + JSON.stringify(response.data));
         const list = Array.from(response.data);
         setExList(exList.concat(list));
         setIsLoading(false);
+        setCount(count + 1);
 
         
       }catch(err){
@@ -99,14 +105,14 @@ const Exercises = () => {
 
     useEffect(() => {
       setRef.current.scrollIntoView({  block: 'start' })
-    })
+    }, [count])
 
 
     return(
         <React.Fragment>
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppSideBar />
+            <AppSideBar title = "Exercise Database"/>
             <Box
               component="main"
               sx={{
@@ -135,8 +141,26 @@ const Exercises = () => {
                           <TableHead>
                             <TableRow>
                               <TableCell>Exercise</TableCell>
-                              <TableCell>Main Target</TableCell>
-                              <TableCell>Equipment</TableCell>
+                              <TableCell>                                
+                                <InputLabel variant="standard" htmlFor="maintarget">
+                                  Main Target
+                                </InputLabel>
+                                <NativeSelect defaultValue={'All'} inputProps={{name: 'maintarget', id: 'maintarget',}} onChange={(e) => setTarget(e.target.value)}>
+                                  {muscleTypes.map((row) => (
+                                    <option value={row}>{row}</option>
+                                  ))}
+                                </NativeSelect>
+                                </TableCell>
+                              <TableCell>
+                                <InputLabel variant="standard" htmlFor="equipment">
+                                  Equipment
+                                </InputLabel>
+                                <NativeSelect defaultValue={'All'} inputProps={{name: 'equipment',id: 'equipment',}} onChange={(e) => setEquip(e.target.value)}>
+                                  {equipmentTypes.map((row) => (
+                                    <option value={row}>{row}</option>
+                                  ))}
+                                </NativeSelect>
+                              </TableCell>
                               <TableCell>Rating</TableCell>
                             </TableRow>
                           </TableHead>
@@ -155,7 +179,9 @@ const Exercises = () => {
                               <TableCell>{row.fullName}</TableCell>
                               <TableCell>{row.mainMuscleName}</TableCell>
                               <TableCell>{row.equipmentTypes.toString()}</TableCell>
-                              <TableCell >{row.rating}</TableCell>
+                              <TableCell >
+                                <Button variant="outlined" color={(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":"success" }>{parseFloat(row.rating)}</Button>
+                                  </TableCell>
                             </TableRow>
                           ))}
                           </TableBody> )}
