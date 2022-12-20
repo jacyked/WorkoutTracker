@@ -10,10 +10,10 @@ let theme = createTheme({
   type: 'dark',
   palette: {
     primary: {
-      main: '#028fc9',
+      main: '#464646',
     },
     secondary: {
-      main: '#aab3d6',
+      main: '#008bff',
     },
     success: {
       main: '#3ed443',
@@ -24,6 +24,7 @@ let theme = createTheme({
     text: {
       inverse: '#fff',
     }
+    
 
   },
 

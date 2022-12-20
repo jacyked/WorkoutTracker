@@ -4,6 +4,9 @@ const exerciseController = require('../../controllers/exerciseController');
 
 router.route('/')
     .get(exerciseController.getAllExercises)
+
+router.route('/:exID')
+    .get(exerciseController.getExercise)
     
 
 

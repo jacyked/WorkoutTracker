@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from '../../hooks/useAuth';
 
@@ -31,6 +32,7 @@ const Exercises = () => {
     const [targetFilter, setTarget] = useState();
     const [equipFilter, setEquip] = useState();
     const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
     const setRef = useRef();
     const { auth } = useAuth();
   
@@ -215,7 +217,9 @@ const Exercises = () => {
                           : (
                           <TableBody>
                           {exList.map((row) => (
-                            <TableRow key={row._id}>
+                            <TableRow key={row._id} onClick={() => {
+                              navigate('/exercises/' + row._id)
+                            }}>
                               <TableCell align='left' style={{minWidth: 100, paddingRight: 0.5}}>{row.fullName}</TableCell>
                               <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.mainMuscleName}</TableCell>
                               <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.equipmentTypes.toString()}</TableCell>

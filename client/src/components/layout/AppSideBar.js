@@ -55,7 +55,7 @@ export const AppSideBar = (props) => {
                     display: 'flex' ,
                     fontWeight: 700,
                     letterSpacing: '.1rem',
-                    color: 'inherit',
+                    color: '#008bff',
                     textDecoration: 'none',
                     }}
                 >

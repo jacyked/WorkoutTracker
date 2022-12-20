@@ -1,5 +1,14 @@
 const Exercise = require('../model/exercise');
 
+const getExercise = async (req, res) => {
+    const _id = req.params.exID;
+    console.log("_ID: ", req.params.exID);
+    if(!_id) return res.status(400).json({ 'message': 'ID required' });
+    const exercise = await Exercise.findById(_id);
+    if (!exercise) return res.status(204).json({ 'message': 'No exercise found' });
+    res.json(exercise);
+}
+
 const getAllExercises = async (req, res) => {
     let tfilter;
     let efilter;
@@ -33,6 +42,7 @@ const getAllExercises = async (req, res) => {
 }
 
 module.exports = {
-    getAllExercises
+    getAllExercises,
+    getExercise,
 }
 

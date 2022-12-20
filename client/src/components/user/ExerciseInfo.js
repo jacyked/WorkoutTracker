@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -7,32 +8,48 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { AppSideBar } from '../layout/AppSideBar.js';
 import useAuth from '../../hooks/useAuth';
 
-const EX_URL="/exercises";
+const EX_URL="/exercises/";
 const ExerciseInfo = (props) => {
+    const { exID } = useParams();
+    const [thisEx, setEx] = useState({
+      id: "",
+      fullName: "",
+      mainMuscleName: "",
+      otherMuscles: "",
+      equipmentTypes: "",
+      equipment: "",
+      description: "",
+      rating: "",
 
-    const [thisEx, setEx] = useState();
+
+
+
+    });
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
+    const [isLoading, setLoading] = useState(false);
     
     
     
     useEffect(() => {
+      setLoading(true);
       let isMounted = true;
       const controller = new AbortController();
-      console.log(JSON.stringify(auth));
-      if(!thisEx){
-        const getUser = async() => {
+      //console.log(JSON.stringify(auth));
+      if(thisEx.fullName === ""){
+        const getEx = async() => {
             try{
                 //All User routes removed the signal in axios request. may want to reinstate
-                const response = await axiosPrivate.get(EX_URL, {
-                    signal: controller.signal
+                const response = await axiosPrivate.get((EX_URL + exID) , {
+                    signal: controller.signal,
                 });
-                console.log("Fired: UserProfile");
+                console.log("Fired: ExerciseInfo");
                 console.log("DATA: " + JSON.stringify(response.data));
-                isMounted && setUser(response.data);
+                isMounted && setEx(response.data);
                 //setAuth({...auth.prev, curUser: response.data});
                 //console.log("User: " + JSON.stringify(response.data));
                 
@@ -41,12 +58,11 @@ const ExerciseInfo = (props) => {
             }
   
         }
-        getUser();
-        }else{
-            setUser(auth.currUser);
+        getEx();
         }
+        setLoading(false);
       return () => {
-            console.log("cleanup, aborting userprofile axios. ");
+          console.log("cleanup, aborting ExerciseInfo axios. ");
           isMounted = false;
           controller.abort();
       }
@@ -66,14 +82,14 @@ const ExerciseInfo = (props) => {
               theme.palette.mode === 'light'
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
-            flexGrow: 1,
+            flexGthisEx: 1,
             height: '100vh',
             overflow: 'auto',
           }}
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+          <Grid container spacing={3}>
               {/* COMPONENT 1 */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
@@ -81,31 +97,25 @@ const ExerciseInfo = (props) => {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 'auto',
                   }}
                 >
-                    <br />
-                    <Typography component="p" variant="subtitle2">
-                    User Profile Here
-                    </Typography>
-                  {/*  ADD COMPONENT 1 HERE  */}
+                {(isLoading)? (
+                    <p>Loading...</p>
+                ):( <Box>
+                      <Typography variant="h4" component='h1'>{thisEx.fullName} <Button variant="outlined" color={(parseFloat(thisEx.rating) <= 0)?"secondary":(parseFloat(thisEx.rating) <= 3.3)?"error":(parseFloat(thisEx.rating) <= 6.6)?"warning":(parseFloat(thisEx.rating) <= 10)?"success":"secondary" }>{((parseFloat(thisEx.rating) >0) && ((parseFloat(thisEx.rating) <= 10)))?parseFloat(thisEx.rating):"N/A"}</Button></Typography>
+                      <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName}</Typography>
+                      <Typography variant="subtitle2" >Other Targets: {thisEx?.otherMuscles.toString()}</Typography>
+                      <Typography variant="subtitle1">Equipment: {thisEx.equipmentTypes.toString()}</Typography>
+                      <Typography variant="subtitle2" >Optional Equipment: {thisEx?.equipment.toString()}</Typography>
+                      <br />
+                      <Typography variant="body2">{thisEx?.description}</Typography>
+                    </Box>
+                )}
                 </Paper>
               </Grid>
               {/* COMPONENT 2 */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  {/* ADD COMPONENT 2 */}
-                </Paper>
-              </Grid>
             </Grid>
-
               
               
           </Container>
@@ -115,4 +125,4 @@ const ExerciseInfo = (props) => {
 
 };
 
-export default UserProfile;
+export default ExerciseInfo;

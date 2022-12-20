@@ -11,6 +11,7 @@ import { Routes, Route } from 'react-router-dom';
 import UserProfile from './components/user/UserProfile';
 import TrackWorkout from './components/user/TrackWorkout';
 import Exercises from './components/user/Exercises';
+import ExerciseInfo from './components/user/ExerciseInfo';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="user" element={<UserProfile />}/>
             <Route path="track" element={<TrackWorkout />} />
             <Route path="exercises" element={<Exercises/>}/>
+            <Route path="exercises/:exID" element={<ExerciseInfo/>}/>
             
           </Route>
         </Route>
