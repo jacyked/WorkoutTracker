@@ -27,7 +27,7 @@ const OFFSET = 10;
 const ALLEX_URL="/exercises";
 const Exercises = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [exList, setExList] = useState([{id: 1, fullName: "test", mainMuscleName: "Bicep", rating: "9/10"}]);
+    const [exList, setExList] = useState([{id: "", fullName: "", mainMuscleName: "", rating: ""}]);
     const [count, setCount] = useState(1);
     const [targetFilter, setTarget] = useState();
     const [equipFilter, setEquip] = useState();
@@ -145,12 +145,6 @@ const Exercises = () => {
       setRef.current.scrollIntoView({  block: 'start' })
     }, [count])
 
-    const columns = [
-      {id: 'fullName', label: 'Name', minWidth: 100},
-      {id: 'target', label: 'Target', minWidth: 100},
-      {id: 'equipment', label: 'Equipment', minWidth: 100},
-      {id: 'rating', label: 'Rating', minWidth: 50, align: 'right'}
-    ]
 
 
     return(
@@ -187,17 +181,17 @@ const Exercises = () => {
                                 <InputLabel variant="standard" htmlFor="maintarget">
                                   Target
                                 </InputLabel>
-                                <NativeSelect defaultValue={'All'} inputProps={{name: 'maintarget', id: 'maintarget',}} onChange={(e) => setTarget(e.target.value)}>
+                                <NativeSelect variant="standard" defaultValue={'All'} inputProps={{name: 'maintarget', id: 'maintarget',}} onChange={(e) => setTarget(e.target.value)}>
                                   {muscleTypes.map((row) => (
                                     <option value={row}>{row}</option>
                                   ))}
                                 </NativeSelect>
                                 </TableCell>
-                              <TableCell align=';eft' style={{minWidth: 50, padding: 0.5}}>
+                              <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>
                                 <InputLabel variant="standard" htmlFor="equipment">
                                   Equipment
                                 </InputLabel>
-                                <NativeSelect defaultValue={'All'} inputProps={{name: 'equipment',id: 'equipment',}} onChange={(e) => setEquip(e.target.value)}>
+                                <NativeSelect variant="standard" defaultValue={'All'} inputProps={{name: 'equipment',id: 'equipment',}} onChange={(e) => setEquip(e.target.value)}>
                                   {equipmentTypes.map((row) => (
                                     <option value={row}>{row}</option>
                                   ))}
@@ -208,11 +202,13 @@ const Exercises = () => {
                           </TableHead>
                           
                           {isLoading ? (
+                            <TableBody>
                             <TableRow>
                               <TableCell colSpan={4}>
                               < LinearProgress />
                               </TableCell>
                             </TableRow>
+                            </TableBody>
                           )
                           : (
                           <TableBody>
