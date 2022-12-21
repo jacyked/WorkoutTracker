@@ -28,7 +28,7 @@ const OFFSET = 5;
 export const LogExercise = (props) => {
     const recTargets = props.recTargets;
     const [findExercise, setFindExercise] = useState("");
-    const [searched, setSearched] = useState(false);
+    const [selected, setSelected] = useState(false);
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([{id: "", fullName: "", mainMuscleName: "", rating: ""}]);
     const [count, setCount] = useState(0);
@@ -43,10 +43,11 @@ export const LogExercise = (props) => {
             const response = await axiosPrivate.get(SEARCH_EX_URL, {
                 params: {
                 limit: OFFSET,
-                skip: (count * OFFSET),
+                skip: 0,
                 searchTerm: findExercise
                 }
             });
+        //TODO if returned list < limit, add end of results flag
         console.log("Request made for search");
         console.log("Results: " + JSON.stringify(response.data));
         const list = Array.from(response.data);
@@ -54,15 +55,37 @@ export const LogExercise = (props) => {
           console.log(i.fullName)})
         setResults(list);
         setCount(count + 1);
-        setSearched(true);
-
-
-        
         }catch(err){
             console.error(err);
         }
         setLoading(false);
     }
+    const loadMore = async (e) => {
+        setLoading(true);
+        try{
+          const response = await axiosPrivate.get(SEARCH_EX_URL, {
+              params: {
+                limit: OFFSET,
+                skip: (count * OFFSET),
+                searchTerm: findExercise
+                //TODO if returned list < limit, add end of results flag
+              }
+          });
+          //console.log("Fired: Load More");
+          //console.log("DATA: " + JSON.stringify(response.data));
+          const list = Array.from(response.data);
+          list.forEach((i) => {
+            console.log(i.fullName)})
+          setResults(results.concat(list));
+          setLoading(false);
+          setCount(count + 1);
+  
+          
+        }catch(err){
+            console.error(err);
+        }
+  
+      }
 
     return(
     <React.Fragment>
@@ -87,15 +110,15 @@ export const LogExercise = (props) => {
             ?(
                 //loading
                 < LinearProgress maxWidth={400}/>
-            ):(searched)?(
-                //display search results results
+            ):(!selected)?(
+                //display search results or default reccomended list
                 <List dense={true}>
                 {results.map((row) => (
                     <ListItemButton key={row._id} onClick={() => {
                     //TODO come back and init click listener to select item
                       console.log("Clicked" + row.fullName)
                     }}>
-                      <ListItemText primary={row.fullName}  secondary={"Targets: " + row.mainMuscleName + " Equipment: row.equipmentTypes.toString()"}/>
+                      <ListItemText primary={row.fullName}  secondary={"Targets: " + row.mainMuscleName + " Equipment: " + row?.equipmentTypes?.toString()}/>
                         <ListItemIcon edge="end">
                             {(parseFloat(row.rating) <= 0)
                             //invalid
@@ -116,9 +139,12 @@ export const LogExercise = (props) => {
                         </ListItemIcon>
                     </ListItemButton>
                   ))}
+                  <ListItemButton onClick={(e) => loadMore(e)}>
+
+                  </ListItemButton>
                 </List>
             ):(
-                //display default list of reccomended exercises 
+                //display selected exercise view for entering sets/reps, equipment, etc
                 <p>Default</p>
 
             )}

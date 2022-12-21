@@ -43,7 +43,7 @@ const Exercises = () => {
     const { auth } = useAuth();
   
     useEffect(() => {
-  
+        
         let isMounted = true;
         const controller = new AbortController();
         if(exList.length === 1){
@@ -87,8 +87,8 @@ const Exercises = () => {
       }
     }, [])
 
-    const loadMore = async () => {
-      
+    const loadMore = async (e) => {
+      e.preventDefault();
       setIsLoading(true);
       try{
         const response = await axiosPrivate.get(ALLEX_URL, {
@@ -247,7 +247,7 @@ const Exercises = () => {
                           ))}
                           </TableBody> )}
                         </Table>
-                        <Button onClick={loadMore} ref={setRef}>See More</Button>
+                        <Button onClick={(e) => loadMore(e)} ref={setRef}>See More</Button>
                     </Paper>
                   
 

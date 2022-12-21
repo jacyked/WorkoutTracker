@@ -131,7 +131,7 @@ const TrackWorkout = () => {
           alignItems: 'center',}} >
 
             <LogExercise recTargets = {thisWorkout.pickTargets}/>
-            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
+            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add Next Exercise</Button>
         </Box>
       </Container>);},
       },
@@ -163,6 +163,10 @@ const TrackWorkout = () => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+  const submitWorkout = () => {
+    console.log("Submitted");
+    setActiveStep(0);
   };
 
   const toggleTarget = (target) => {
@@ -225,7 +229,7 @@ const TrackWorkout = () => {
           flexDirection: 'column',
           alignItems: 'center',}} >
           <LogExercise recTargets = {thisWorkout.pickTargets}/>
-            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
+            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add Next Exercise</Button>
             <Button color="error" variant="outlined" id="deleteButton" name ="deleteButton" label="Delete" onClick={() => exToDelete(active, s)}>Delete</Button>
         </Box>
       </Container>);}
@@ -311,8 +315,8 @@ const TrackWorkout = () => {
                   activeStep={activeStep}
                   sx={{ flexGrow: 1 }}
                     nextButton={
-                      <Button size="small" onClick={handleNext} disabled={activeStep === (steps - 1)}>
-                        {(activeStep === 0)?"Start":"Next"}
+                      <Button size="small" onClick={(activeStep < (steps - 1))?handleNext:submitWorkout}>
+                        {(activeStep === 0)?"Start":(activeStep === (steps - 2))?"Wrap Up":(activeStep === (steps-1))?"Save Workout":"Next"}
                         {theme.direction === 'rtl' ? (
                           <KeyboardArrowLeft />
                         ) : (
