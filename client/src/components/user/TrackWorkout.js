@@ -178,7 +178,7 @@ const TrackWorkout = () => {
           label="Find Exercise: "
           value={findExercise}
           onChange={(e) => setFindExercise(e.target.value)}/>
-          <Button id="addButton" name ="addButton" label="Add" onClick={exToAdd}>Add</Button>
+          <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(activeStep, steps)}>Add</Button>
       </Box>
     </Container>);},
     },
@@ -201,15 +201,15 @@ const TrackWorkout = () => {
     },
   ]
 
-  const exToAdd = () => {
-    const newStep = steps - 1;
-    setExAdded(exAdded + 1);
+  function exToAdd(curStep, allSteps){
+    const newStep = curStep + 1;
     stepFunctions.push({
       condition: newStep,
       fn() {return(<p>Peepee</p>)}
     });
     setSteps(steps + 1);
     stepFunctions.forEach((i) => {console.log(i.condition.toString())})
+    console.log("Steps: " + steps );
   }
   
 
@@ -259,7 +259,7 @@ const TrackWorkout = () => {
                   activeStep={activeStep}
                   sx={{ flexGrow: 1 }}
                     nextButton={
-                      <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
+                      <Button size="small" onClick={handleNext} disabled={activeStep === (steps - 1)}>
                         {(activeStep === 0)?"Start":"Next"}
                         {theme.direction === 'rtl' ? (
                           <KeyboardArrowLeft />
