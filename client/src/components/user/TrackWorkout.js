@@ -30,7 +30,7 @@ const TrackWorkout = () => {
   const { auth } = useAuth();
   const [steps, setSteps] = useState(3);
   const [findExercise, setFindExercise] = useState("");
-  const [exAdded, setExAdded] = useState(0);
+  //const [exAdded, setExAdded] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [thisWorkout, setWorkout] = useState({ 
     userID: auth?.currUser?._id,
@@ -46,10 +46,122 @@ const TrackWorkout = () => {
     finalNote: "",
 
   });
+  const [stepFunctions, setStepFunctions] = useState([
+    {
+      condition: 0, 
+      fn() {return(
+            <Container>
+            <Typography variant="h6">Before your workout</Typography>
+            <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',}} >                
+            
+            <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
+              <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
+              <NativeSelect variant="standard" value={thisWorkout.pickTargets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
+                {muscleTypes.map((row) => (
+                  <option value={row}>{row}</option>
+                ))}
+              </NativeSelect>
+            </Box>
+            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
+            <TextField 
+            id="datetime-local" 
+            label="Started at " 
+            type="datetime-local" 
+            required
+            sx={{ width: 250 }}
+            value={thisWorkout.startDate}
+            InputLabelProps={{shrink: true,}}
+            onChange={(e) => {setWorkout({
+              ...thisWorkout,
+              startDate: e.target.value})}} 
+            />
+            </Box>
+            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
+            <Typography variant="subtitle1">Notes: </Typography>
+            <FormControlLabel
+                control={<Checkbox id="yespre" value="yespre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="I took preworkout"
+            />
+            <FormControlLabel
+                control={<Checkbox id="nopre" value="nopre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="No preworkout"
+            />
+            <FormControlLabel
+                control={<Checkbox id="yesmeal" value="yesmeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="High carb meal before"
+            />
+            <FormControlLabel
+                control={<Checkbox id="nomeal" value="nomeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="Not enough food before"
+            />
+            <TextField 
+            id="other"
+            name="other"
+            label="Other: "
+            value={thisWorkout.other}
+            onChange={(e) => setWorkout({...thisWorkout,
+            other: e.target.value})}/>
+            <Box sx={{ pt: 4}}>
+            <Typography variant='subtitle1'>Sleep Quality: </Typography>
+            <Slider
+              aria-label="Sleep Quality"
+              value={thisWorkout.sleep}
+              valueLabelDisplay="auto"
+              min={0}
+              max={10}
+              track={false}
+              marks= {[{value: 0, label: 'Worst'}, {value: 10, label: 'Best'},]}
+              onChange= {(e) => setWorkout({...thisWorkout,
+              sleep: e.target.value})}
+            />
+            </Box>
+            </Box>
+          </Box>
+          </Container>);},
+      },
+      {
+      condition: 1,
+      fn(active, s){ return(<Container>
+        <Typography variant="h6">Exercise 1</Typography>
+        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',}} >
+          <TextField 
+            id="exSearch"
+            name="exSearch"
+            label="Find Exercise: "
+            value={findExercise}
+            onChange={(e) => setFindExercise(e.target.value)}/>
+            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
+        </Box>
+      </Container>);},
+      },
+      {
+      condition: steps - 1,
+      fn(){return(<Container>
+        <Typography variant="h6">Summary </Typography>
+        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',}} >
+          <TextField 
+            id="finalNote"
+            name="finalNote"
+            label="Final Notes: "
+            value={thisWorkout.finalNote}
+            onChange={(e) => setWorkout({...thisWorkout,
+            finalNote: e.target.value})}/>
+        </Box>
+      </Container>);}
+      },
+
+  ])
   
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    
   };
 
   const handleBack = () => {
@@ -90,133 +202,48 @@ const TrackWorkout = () => {
   useEffect(()=> {console.log("State changed: " + JSON.stringify(thisWorkout));
   console.log("Current auth: " + JSON.stringify(auth))},[thisWorkout])
 
-  const stepFunctions = [
-    {
-    condition: 0, 
-    fn() {return(
-          <Container>
-          <Typography variant="h6">Before your workout</Typography>
-          <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',}} >                
-          
-          <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
-            <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
-            <NativeSelect variant="standard" value={thisWorkout.pickTargets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
-              {muscleTypes.map((row) => (
-                <option value={row}>{row}</option>
-              ))}
-            </NativeSelect>
-          </Box>
-          <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
-          <TextField 
-          id="datetime-local" 
-          label="Started at " 
-          type="datetime-local" 
-          required
-          sx={{ width: 250 }}
-          value={thisWorkout.startDate}
-          InputLabelProps={{shrink: true,}}
-          onChange={(e) => {setWorkout({
-            ...thisWorkout,
-            startDate: e.target.value})}} 
-          />
-          </Box>
-          <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
-          <Typography variant="subtitle1">Notes: </Typography>
-          <FormControlLabel
-              control={<Checkbox id="yespre" value="yespre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-              label="I took preworkout"
-          />
-          <FormControlLabel
-              control={<Checkbox id="nopre" value="nopre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-              label="No preworkout"
-          />
-          <FormControlLabel
-              control={<Checkbox id="yesmeal" value="yesmeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-              label="High carb meal before"
-          />
-          <FormControlLabel
-              control={<Checkbox id="nomeal" value="nomeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-              label="Not enough food before"
-          />
-          <TextField 
-          id="other"
-          name="other"
-          label="Other: "
-          value={thisWorkout.other}
-          onChange={(e) => setWorkout({...thisWorkout,
-          other: e.target.value})}/>
-          <Box sx={{ pt: 4}}>
-          <Typography variant='subtitle1'>Sleep Quality: </Typography>
-          <Slider
-            aria-label="Sleep Quality"
-            value={thisWorkout.sleep}
-            valueLabelDisplay="auto"
-            min={0}
-            max={10}
-            track={false}
-            marks= {[{value: 0, label: 'Worst'}, {value: 10, label: 'Best'},]}
-            onChange= {(e) => setWorkout({...thisWorkout,
-            sleep: e.target.value})}
-          />
-          </Box>
-          </Box>
-        </Box>
-        </Container>);},
-    },
-    {
-    condition: 1,
-    fn(){ return(<Container>
-      <Typography variant="h6">Exercise {activeStep}</Typography>
-      <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',}} >
-        <TextField 
-          id="exSearch"
-          name="exSearch"
-          label="Find Exercise: "
-          value={findExercise}
-          onChange={(e) => setFindExercise(e.target.value)}/>
-          <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(activeStep, steps)}>Add</Button>
-      </Box>
-    </Container>);},
-    },
-    {
-    condition: steps - 1,
-    fn(){return(<Container>
-      <Typography variant="h6">Summary </Typography>
-      <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',}} >
-        <TextField 
-          id="finalNote"
-          name="finalNote"
-          label="Final Notes: "
-          value={thisWorkout.finalNote}
-          onChange={(e) => setWorkout({...thisWorkout,
-          finalNote: e.target.value})}/>
-      </Box>
-    </Container>);}
-    },
-  ]
 
   function exToAdd(curStep, allSteps){
+    console.log("Passed in current Step: " + curStep);
+    console.log("stepFunctions length: " + stepFunctions.length);
+    let s = "Conditions: "
+    stepFunctions.forEach((i) => (s = (s + i.condition + ", ")));
+    console.log(s);
     const newStep = curStep + 1;
-    stepFunctions.push({
+    const stepList = stepFunctions
+    //for every step after current
+    const after = [];
+    for(let i = curStep; i < stepList.length; i++){
+      let t = stepList.pop();
+      t.condition = (t.condition + 1)
+      after.push(t);
+    }
+    console.log("Steps after current: " + after.length)
+    console.log("Current length of stepList before adding: " + stepList.length);
+    stepList.push({
       condition: newStep,
-      fn() {return(<p>Peepee</p>)}
+      fn() {return(<p>Step {newStep}</p>)}
     });
-    setSteps(steps + 1);
+    console.log("Pushed new step, now stepList lengt: " + stepList.length);
+    let l = after.length;
+    for(let i = 0; i < l; i++){
+      let t = after.pop();
+      stepList.push(t);
+    }
+    console.log("No. of Steps: " + allSteps + ", Length after adding: " + stepList.length);
+    setSteps(allSteps + 1);
+    setStepFunctions(stepList);
     stepFunctions.forEach((i) => {console.log(i.condition.toString())})
-    console.log("Steps: " + steps );
+    console.log("Steps after add should be: " + (allSteps + 1) );
   }
   
 
   const RenderStep = () => {
+      console.log("Active Step: " + activeStep + " / " + (steps - 1) + ", Total: " + steps);
+      console.log("Length: " + stepFunctions.length);
       for(const { condition, fn} of stepFunctions){
         if(activeStep === condition){
-          return(fn(activeStep));
+          return(fn(activeStep, steps));
           break;
         }
       }
