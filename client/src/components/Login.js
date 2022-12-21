@@ -16,7 +16,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 import axios from '../api/axios';
-const LOGIN_URL = '/auth';
+import { LOGIN_URL } from '../constants';
+
 
 const Login = () => {
     const { setAuth, persist, setPersist } = useAuth();

@@ -12,8 +12,7 @@ import { AppSideBar } from './layout/AppSideBar.js';
 import { Typography } from '@mui/material';
 
 import WorkoutList from './user/WorkoutList';
-
-const USER_URL = "./user";
+import { USER_URL } from '../constants';
 
 const Home = () => {
     const [thisUser, setUser] = useState();

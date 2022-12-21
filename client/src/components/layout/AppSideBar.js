@@ -105,10 +105,3 @@ export const AppSideBar = (props) => {
  
     );
 }
-
-
-<List component="nav">
-{MainListItems}
-<Divider sx={{ my: 1 }} />
-<SecondaryListItems />
-</List>

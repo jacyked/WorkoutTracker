@@ -9,8 +9,8 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { AppSideBar } from '../layout/AppSideBar.js';
 import useAuth from '../../hooks/useAuth';
+import { USER_URL } from '../../constants';
 
-const USER_URL="/user";
 const UserProfile = () => {
 
     const [thisUser, setUser] = useState();

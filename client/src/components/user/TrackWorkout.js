@@ -16,13 +16,14 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import TextField from '@mui/material/TextField';
-import { muscleTypes, equipmentTypes } from "../layout/ExerciseResources";
+import { muscleTypes, equipmentTypes } from "../../constants";
 import InputLabel from '@mui/material/InputLabel';
 import NativeSelect from '@mui/material/NativeSelect';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Slider from '@mui/material/Slider';
 import { format } from 'date-fns';
+import { LogExercise } from "../layout/LogExercise";
 
 
 const TrackWorkout = () => {
@@ -128,12 +129,8 @@ const TrackWorkout = () => {
         <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',}} >
-          <TextField 
-            id="exSearch"
-            name="exSearch"
-            label="Find Exercise: "
-            value={findExercise}
-            onChange={(e) => setFindExercise(e.target.value)}/>
+
+            <LogExercise recTargets = {thisWorkout.pickTargets}/>
             <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
         </Box>
       </Container>);},
@@ -227,12 +224,7 @@ const TrackWorkout = () => {
         <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',}} >
-          <TextField 
-            id="exSearch"
-            name="exSearch"
-            label="Find Exercise: "
-            value={findExercise}
-            onChange={(e) => setFindExercise(e.target.value)}/>
+          <LogExercise recTargets = {thisWorkout.pickTargets}/>
             <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
             <Button color="error" variant="outlined" id="deleteButton" name ="deleteButton" label="Delete" onClick={() => exToDelete(active, s)}>Delete</Button>
         </Box>

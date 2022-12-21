@@ -18,13 +18,19 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import { AppSideBar } from '../layout/AppSideBar.js';
-import { muscleTypes, equipmentTypes } from "../layout/ExerciseResources";
+import { muscleTypes, equipmentTypes, ALLEX_URL } from "../../constants";
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
+import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
+import Looks4OutlinedIcon from '@mui/icons-material/Looks4Outlined';
+import Looks5OutlinedIcon from '@mui/icons-material/Looks5Outlined';
 
 const OFFSET = 10;
-const ALLEX_URL="/exercises";
+
 const Exercises = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [exList, setExList] = useState([{id: "", fullName: "", mainMuscleName: "", rating: ""}]);
@@ -98,7 +104,7 @@ const Exercises = () => {
         const list = Array.from(response.data);
         list.forEach((i) => {
           console.log(i.fullName)})
-        setExList(list)
+        //setExList(list)
         setExList(exList.concat(list));
         setIsLoading(false);
         setCount(count + 1);
@@ -220,7 +226,22 @@ const Exercises = () => {
                               <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.mainMuscleName}</TableCell>
                               <TableCell align='left' style={{minWidth: 50, padding: 0.5}}>{row.equipmentTypes.toString()}</TableCell>
                               <TableCell align='right' style={{minWidth: 50, paddingLeft: 0.5}}>
-                                <Button sx={{padding: 1, minHeight: 0, minWidth: 0,}} variant="outlined" color={(parseFloat(row.rating) <= 0)?"secondary":(parseFloat(row.rating) <= 3.3)?"error":(parseFloat(row.rating) <= 6.6)?"warning":(parseFloat(row.rating) <= 10)?"success":"secondary" }>{((parseFloat(row.rating) >0) && ((parseFloat(row.rating) <= 10)))?parseFloat(row.rating):"N/A"}</Button>
+                                {(parseFloat(row.rating) <= 0)
+                                //invalid
+                                ? <CheckBoxOutlineBlankOutlinedIcon />
+                                //valid
+                                :(parseFloat(row.rating) <= 2)
+                                ? <LooksOneOutlinedIcon  />
+                                :(parseFloat(row.rating) <= 4)
+                                ? <LooksTwoOutlinedIcon color="error"/>
+                                :(parseFloat(row.rating) <= 6)
+                                ?<Looks3OutlinedIcon color="warning"/>
+                                :(parseFloat(row.rating) <= 8)
+                                ?<Looks4OutlinedIcon style={{color: '#b6e824'}}/>
+                                :(parseFloat(row.rating) <= 10)
+                                ?<Looks5OutlinedIcon color="success"/>
+                                :<CheckBoxOutlineBlankOutlinedIcon />
+                                }
                                   </TableCell>
                             </TableRow>
                           ))}
