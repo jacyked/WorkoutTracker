@@ -124,7 +124,7 @@ const TrackWorkout = () => {
       {
       condition: 1,
       fn(active, s){ return(<Container>
-        <Typography variant="h6">Exercise 1</Typography>
+        <Typography variant="h6">Add Exercise</Typography>
         <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',}} >
@@ -222,7 +222,21 @@ const TrackWorkout = () => {
     console.log("Current length of stepList before adding: " + stepList.length);
     stepList.push({
       condition: newStep,
-      fn() {return(<p>Step {newStep}</p>)}
+      fn(active, s){ return(<Container>
+        <Typography variant="h6">Add Exercise</Typography>
+        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',}} >
+          <TextField 
+            id="exSearch"
+            name="exSearch"
+            label="Find Exercise: "
+            value={findExercise}
+            onChange={(e) => setFindExercise(e.target.value)}/>
+            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add</Button>
+            <Button color="error" variant="outlined" id="deleteButton" name ="deleteButton" label="Delete" onClick={() => exToDelete(active, s)}>Delete</Button>
+        </Box>
+      </Container>);}
     });
     console.log("Pushed new step, now stepList lengt: " + stepList.length);
     let l = after.length;
@@ -235,6 +249,25 @@ const TrackWorkout = () => {
     setStepFunctions(stepList);
     stepFunctions.forEach((i) => {console.log(i.condition.toString())})
     console.log("Steps after add should be: " + (allSteps + 1) );
+  }
+  function exToDelete(curStep, allSteps){
+    const after = [];
+    const stepList = stepFunctions;
+    for(let i = curStep; i < stepList.length; i++){
+      let t = stepList.pop();
+      t.condition = (t.condition - 1);
+      after.push(t);
+    }
+    stepList.pop();
+    let l = after.length;
+    for(let i = 0; i < l; i++){
+      let t = after.pop();
+      stepList.push(t);
+    }
+    setSteps(allSteps - 1);
+    setStepFunctions(stepList);
+
+
   }
   
 
