@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from '../../hooks/useAuth';
@@ -19,14 +19,21 @@ import TextField from '@mui/material/TextField';
 import { muscleTypes, equipmentTypes } from "../layout/ExerciseResources";
 import InputLabel from '@mui/material/InputLabel';
 import NativeSelect from '@mui/material/NativeSelect';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Slider from '@mui/material/Slider';
 
 
 const TrackWorkout = () => {
+  const otherRef = useRef();
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState('');
   const [targets, setTargets] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [other, setOther] = useState('');
+  const [sleep, setSleep] = useState(-1);
   const [thisWorkout, setWorkout] = useState();
 
   const handleNext = () => {
@@ -48,7 +55,22 @@ const TrackWorkout = () => {
     setTargets(arr);
   }
 
-  useEffect(()=> {console.log("Targets changed: " + targets.toString())},[targets])
+  const setNote = (content, checked) => {
+    console.log("Note: " + content + ", Checked: " + checked);
+    console.log("Old Notes: " + arr.toString());
+    const arr = notes;
+    if(checked){
+        arr.push(content);
+    }
+    else{
+      if(arr.includes(content)){
+        arr.splice(arr.indexOf(content));
+      }
+    }
+    setNotes(arr);
+  }
+
+  useEffect(()=> {console.log("Notes changed: " + notes.toString())},[notes])
 
    
   
@@ -57,24 +79,21 @@ const TrackWorkout = () => {
     switch(activeStep){
       case 0:
         return(
-          <Grid container spacing={3}>
-          <Grid item xs={12} sm={12} md={12} lg={12} xl={12} sx={{p: {xs: 2, md: 3, lg: 4}}}>
-            <Typography variant="h5">Before your workout: </Typography>
-          </Grid>
+          <Container>
+          <Typography variant="h6">Before your workout</Typography>
+          <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',}} >                
           
-          <Grid item xs={12} sm={4} sx={{
-                      p: {xs: 1, md: 2, lg: 3}
-                    }}>
+          <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
             <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
             <NativeSelect variant="standard" value={targets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
               {muscleTypes.map((row) => (
                 <option value={row}>{row}</option>
               ))}
             </NativeSelect>
-          </Grid>
-          <Grid item xs={12} sm={4} sx={{
-                      p: {xs: 2, md: 3, lg: 4}
-                    }}>
+          </Box>
+          <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
           <TextField 
           id="datetime-local" 
           label="Started at " 
@@ -84,13 +103,58 @@ const TrackWorkout = () => {
           value={startDate}
           InputLabelProps={{shrink: true,}}
           onChange={(e) => {setStartDate(e.target.value)}} 
-          
           />
-          </Grid>
-        </Grid>);
+          </Box>
+          <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
+          <Typography variant="subtitle1">Notes: </Typography>
+          <FormControlLabel
+              control={<Checkbox id="yespre" value="yespre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+              label="I took preworkout"
+          />
+          <FormControlLabel
+              control={<Checkbox id="nopre" value="nopre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+              label="No preworkout"
+          />
+          <FormControlLabel
+              control={<Checkbox id="yesmeal" value="yesmeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+              label="High carb meal before"
+          />
+          <FormControlLabel
+              control={<Checkbox id="nomeal" value="nomeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+              label="Not enough food before"
+          />
+          <TextField 
+          id="other"
+          name="other"
+          label="Other: "
+          value={other}
+          onChange={(e) => setOther(e.target.value)}/>
+          <Box sx={{ pt: 4}}>
+          <Typography variant='subtitle1'>Sleep Quality: </Typography>
+          <Slider
+            aria-label="Sleep Quality"
+            defaultValue={5}
+            valueLabelDisplay="auto"
+            min={0}
+            max={10}
+            track={false}
+            marks= {[{value: 0, label: 'Worst',}, {value: 10, label: 'Best'}]}
+            onClick= {(e) => setSleep(e.target.value)}
+          />
+          </Box>
+          </Box>
+        </Box>
+        </Container>);
         break;
       case 1:
-        return(<Typography variant="h6">Step 1</Typography>);
+        return(<Container>
+          <Typography variant="h6">Exercise 1</Typography>
+          <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',}} > 
+
+          </Box>
+        </Container>);
         break;
       default:
         return(<Typography variant="h4">Ki has small PP</Typography>);
