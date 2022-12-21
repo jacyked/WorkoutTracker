@@ -165,7 +165,7 @@ const Register = () => {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                {validUName ? <CheckCircleIcon/> : (!username ? "" : <CancelIcon/>)}
+                                {validUName ? <CheckCircleIcon color="success"/> : (!username ? "" : <CancelIcon color="warning"/>)}
                                 </InputAdornment>
                             ),
                             }}
@@ -189,7 +189,7 @@ const Register = () => {
                             InputProps={{
                                 startAdornment: (
                                   <InputAdornment position="start">
-                                    {validEmail ? <CheckCircleIcon/> : (!email ? "" : <CancelIcon/>)}
+                                    {validEmail ? <CheckCircleIcon color="success"/> : (!email ? "" : <CancelIcon color="warning"/>)}
                                   </InputAdornment>
                                 ),
                             }}                        
@@ -210,7 +210,7 @@ const Register = () => {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                {validPwd ? <CheckCircleIcon/> : (!password ? "" : <CancelIcon/>)}
+                                {validPwd ? <CheckCircleIcon color="success"/> : (!password ? "" : <CancelIcon color="warning"/>)}
                                 </InputAdornment>
                             ),
                         }}
@@ -221,6 +221,7 @@ const Register = () => {
                         label="Password"
                         type="password"
                         id="password"
+                        autoComplete="new-password"
                         aria-invalid={validPwd ? "false" : "true"}
                         aria-describedby="pwdnote"
                         onChange={(e) => setPassword(e.target.value)}
@@ -231,7 +232,7 @@ const Register = () => {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                {!matchPassword ? "" : (validMatch ? <CheckCircleIcon/> : <CancelIcon/>)}
+                                {!matchPassword ? "" : (validMatch ? <CheckCircleIcon color="success"/> : <CancelIcon color="warning"/>)}
                                 </InputAdornment>
                             ),
                         }}

@@ -30,6 +30,7 @@ const handleLogin = async (req, res) => {
         const result = await foundUser.save();
         //Send only required info to user
         const currUser = { 
+            _id: foundUser._id,
             username: foundUser.username, 
             date: foundUser.date, 
             email: foundUser.email, 
