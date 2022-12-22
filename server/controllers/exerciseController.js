@@ -40,9 +40,35 @@ const getAllExercises = async (req, res) => {
     if (!exercises) return res.status(204).json({ 'message': 'No exercises found' });
     res.json(exercises);
 }
+const searchExercises = async (req, res) => {
+    let limit = req.query.limit;
+    let skip = req.query.skip;
+    let searchTerm = req.query.searchTerm;
+    let targets = req.query?.targets?.toString();
+    let exercises;
+    console.log("Limit: ", limit, ", Skip: ", skip, ", Search: ", searchTerm, ", Targets: " + targets);
+    // If No search term specified, use targets for default response + add more
+    // If search term exists, ignore targets and return similar results + add more
+    if(!searchTerm){
+        if(!targets || targets.includes('All')){
+            //No search term or targets, or All targets, return top rated
+            exercises = await Exercise.find().sort({rating:-1}).limit(limit).skip(skip);
+        }else{
+            exercises = await Exercise.find({mainMuscleName: targets}).sort({rating:-1}).limit(limit).skip(skip);
+        }
+    }
+    else{
+        exercises = await Exercise.find({$text: {$search: searchTerm}}).sort({ score: { $meta: "textScore" } }).limit(limit).skip(skip);
+    }
+    if (!exercises) return res.status(204).json({ 'message': 'No exercises found' });
+    res.json(exercises);
+
+}
+
 
 module.exports = {
     getAllExercises,
     getExercise,
+    searchExercises,
 }
 

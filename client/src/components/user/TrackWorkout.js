@@ -30,8 +30,6 @@ const TrackWorkout = () => {
   const theme = useTheme();
   const { auth } = useAuth();
   const [steps, setSteps] = useState(3);
-  const [findExercise, setFindExercise] = useState("");
-  //const [exAdded, setExAdded] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [thisWorkout, setWorkout] = useState({ 
     userID: auth?.currUser?._id,
@@ -204,7 +202,7 @@ const TrackWorkout = () => {
   console.log("Current auth: " + JSON.stringify(auth))},[thisWorkout])
 
 
-  function exToAdd(curStep, allSteps){
+  function exToAdd(curStep, allSteps,){
     console.log("Passed in current Step: " + curStep);
     console.log("stepFunctions length: " + stepFunctions.length);
     let s = "Conditions: "

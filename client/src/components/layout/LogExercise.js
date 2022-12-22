@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { muscleTypes, equipmentTypes, SEARCH_EX_URL } from "../../constants";
 
@@ -22,11 +22,14 @@ import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
 import Looks4OutlinedIcon from '@mui/icons-material/Looks4Outlined';
 import Looks5OutlinedIcon from '@mui/icons-material/Looks5Outlined';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 const OFFSET = 5;
 
 export const LogExercise = (props) => {
-    const recTargets = props.recTargets;
+    const [recTargets, setTargets] = useState(props.recTargets);
+    const [defaultResults, setDefault] = useState(true);
     const [findExercise, setFindExercise] = useState("");
     const [selected, setSelected] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -55,11 +58,13 @@ export const LogExercise = (props) => {
           console.log(i.fullName)})
         setResults(list);
         setCount(count + 1);
+        setTargets("");
         }catch(err){
             console.error(err);
         }
         setLoading(false);
     }
+
     const loadMore = async (e) => {
         setLoading(true);
         try{
@@ -67,7 +72,8 @@ export const LogExercise = (props) => {
               params: {
                 limit: OFFSET,
                 skip: (count * OFFSET),
-                searchTerm: findExercise
+                searchTerm: findExercise,
+                targets: recTargets
                 //TODO if returned list < limit, add end of results flag
               }
           });
@@ -86,6 +92,50 @@ export const LogExercise = (props) => {
         }
   
       }
+
+      useEffect(() => {
+        setLoading(true);
+        let isMounted = true;
+        const controller = new AbortController();
+        if(defaultResults){
+        //console.log(JSON.stringify(auth));
+        const getDefault = async() => {
+            try{
+                //All User routes removed the signal in axios request. may want to reinstate
+                const response = await axiosPrivate.get(SEARCH_EX_URL, {
+                    signal: controller.signal,
+                    params: {
+                      limit: OFFSET,
+                      skip: 0,
+                      targets: recTargets,
+                    }
+                });
+                //console.log("Fired: Exercises");
+                //console.log("DATA: " + JSON.stringify(response.data));
+                //const test = JSON.parse(response.data);
+                //console.log("Parsed: " + test);
+
+                //response.data.forEach(e => console.log("Element " + JSON.stringify(e)))
+                //response.data[0].forEach(console.log("ForEach sent"))
+                const list = Array.from(response.data);
+                isMounted && setResults(list);
+                //setAuth({...auth.prev, curUser: response.data});
+                //console.log("User: " + JSON.stringify(response.data));
+                
+            }catch(err){
+                console.error(err);
+            }
+  
+        }
+        getDefault();
+        setLoading(false);
+    }
+    return () => {
+        console.log("cleanup, aborting exercises axios. ");
+          isMounted = false;
+          controller.abort();
+      }
+    }, [])
 
     return(
     <React.Fragment>
@@ -118,7 +168,7 @@ export const LogExercise = (props) => {
                     //TODO come back and init click listener to select item
                       console.log("Clicked" + row.fullName)
                     }}>
-                      <ListItemText primary={row.fullName}  secondary={"Targets: " + row.mainMuscleName + " Equipment: " + row?.equipmentTypes?.toString()}/>
+                      <ListItemText primary={row.fullName}  secondary={<React.Fragment><div>Targets:  {row.mainMuscleName} </div><div>Equipment: {row?.equipmentTypes?.toString()}</div></React.Fragment>}/>
                         <ListItemIcon edge="end">
                             {(parseFloat(row.rating) <= 0)
                             //invalid
@@ -140,12 +190,15 @@ export const LogExercise = (props) => {
                     </ListItemButton>
                   ))}
                   <ListItemButton onClick={(e) => loadMore(e)}>
-
+                    <ListItemText primary="Load More..." />
+                    <ListItemIcon edge="bottom">
+                        <KeyboardArrowDownIcon />
+                    </ListItemIcon>
                   </ListItemButton>
                 </List>
             ):(
                 //display selected exercise view for entering sets/reps, equipment, etc
-                <p>Default</p>
+                <p>Selected</p>
 
             )}
             </Box>
