@@ -1,172 +1,152 @@
-
+import React, { useState, useEffect, useRef } from "react";
+import { Outlet } from "react-router-dom"
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAuth from '../../hooks/useAuth';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import TextField from '@mui/material/TextField';
+import { muscleTypes, equipmentTypes } from "../../constants";
+import InputLabel from '@mui/material/InputLabel';
+import NativeSelect from '@mui/material/NativeSelect';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Slider from '@mui/material/Slider';
+import { format } from 'date-fns';
 
 export const StartWorkout = (props) => {
+    const { auth } = useAuth();
+    const [thisWorkout, setWorkout] = useState({ 
+        userID: auth?.currUser?._id,
+        startDate: format(new Date(), "yyyy-MM-dd hh:mm"), 
+        endDate: "", 
+        pickTargets: ["All"],
+        calcTargets: [],
+        notes: [],
+        other: '',
+        sleep: 5,
+        exCount: 1,
+        exercises: [{}],
+        finalNote: "",
+    
+      });
 
-
-    const searchExercise = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        console.log("Searching for: " + findExercise);
-        //Search axios for matching exercises
-        try{
-            const response = await axiosPrivate.get(SEARCH_EX_URL, {
-                params: {
-                limit: OFFSET,
-                skip: 0,
-                searchTerm: findExercise
-                }
-            });
-        //TODO if returned list < limit, add end of results flag
-        console.log("Request made for search");
-        console.log("Results: " + JSON.stringify(response.data));
-        const list = Array.from(response.data);
-        list.forEach((i) => {
-          console.log(i.fullName)})
-        setResults(list);
-        setCount(count + 1);
-        setTargets("");
-        }catch(err){
-            console.error(err);
+    const toggleTarget = (target) => {
+        const thisArr = thisWorkout.pickTargets;
+        if(thisArr.includes(target)) {
+          thisArr.splice(thisArr.indexOf(target));
         }
-        setLoading(false);
-    }
-
-    const loadMore = async (e) => {
-        setLoading(true);
-        try{
-          const response = await axiosPrivate.get(SEARCH_EX_URL, {
-              params: {
-                limit: OFFSET,
-                skip: (count * OFFSET),
-                searchTerm: findExercise,
-                targets: recTargets
-                //TODO if returned list < limit, add end of results flag
-              }
-          });
-          //console.log("Fired: Load More");
-          //console.log("DATA: " + JSON.stringify(response.data));
-          const list = Array.from(response.data);
-          list.forEach((i) => {
-            console.log(i.fullName)})
-          setResults(results.concat(list));
-          setLoading(false);
-          setCount(count + 1);
-  
-          
-        }catch(err){
-            console.error(err);
+        else {
+          thisArr.push(target);
         }
-  
+        setWorkout({
+          ...thisWorkout,
+          pickTargets: thisArr,});
       }
-
-      useEffect(() => {
-        setLoading(true);
-        let isMounted = true;
-        const controller = new AbortController();
-        if(defaultResults){
-        //console.log(JSON.stringify(auth));
-        const getDefault = async() => {
-            try{
-                //All User routes removed the signal in axios request. may want to reinstate
-                const response = await axiosPrivate.get(SEARCH_EX_URL, {
-                    signal: controller.signal,
-                    params: {
-                      limit: OFFSET,
-                      skip: 0,
-                      targets: recTargets,
-                    }
-                });
-                //console.log("Fired: Exercises");
-                //console.log("DATA: " + JSON.stringify(response.data));
-                //const test = JSON.parse(response.data);
-                //console.log("Parsed: " + test);
-
-                //response.data.forEach(e => console.log("Element " + JSON.stringify(e)))
-                //response.data[0].forEach(console.log("ForEach sent"))
-                const list = Array.from(response.data);
-                isMounted && setResults(list);
-                //setAuth({...auth.prev, curUser: response.data});
-                //console.log("User: " + JSON.stringify(response.data));
-                
-            }catch(err){
-                console.error(err);
-            }
-  
+    
+      const setNote = (note, checked) => {
+        //console.log("Note: " + content + ", Checked: " + checked);
+        //console.log("Old Notes: " + arr.toString());
+        const arr = thisWorkout.notes;
+        if(checked){
+            arr.push(note);
         }
-        getDefault();
-        setLoading(false);
-    }
-    return () => {
-        console.log("cleanup, aborting exercises axios. ");
-          isMounted = false;
-          controller.abort();
+        else{
+          if(arr.includes(note)){
+            arr.splice(arr.indexOf(note));
+          }
+        }
+        setWorkout({
+          ...thisWorkout,
+          notes: arr
+        });
       }
-    }, [])
+    
+    useEffect(()=>{
+        console.log("ThisWorkout updated within start");
+        console.log("Props: " + JSON.stringify(props));
+    }, [thisWorkout])
+    
+        
+        
 
     return(
     <React.Fragment>
         <Container>
-        <TextField 
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton aria-label="search" colour="primary" onClick={(e) => searchExercise(e)}>
-                                <SearchIcon />
-                            </IconButton> 
-                        </InputAdornment>
-                    ),
-                }} 
-            id="exSearch"
-            name="exSearch"
-            label="Find Exercise: "
-            value={findExercise}
-            onChange={(e) => setFindExercise(e.target.value)}/>
-            <Box>
-            {(loading)
-            ?(
-                //loading
-                < LinearProgress maxWidth={400}/>
-            ):(!selected)?(
-                //display search results or default reccomended list
-                <List dense={true}>
-                {results.map((row) => (
-                    <ListItemButton key={row._id} onClick={() => {
-                    //TODO come back and init click listener to select item
-                      console.log("Clicked" + row.fullName)
-                    }}>
-                      <ListItemText primary={row.fullName}  secondary={<React.Fragment><div>Targets:  {row.mainMuscleName} </div><div>Equipment: {row?.equipmentTypes?.toString()}</div></React.Fragment>}/>
-                        <ListItemIcon edge="end">
-                            {(parseFloat(row.rating) <= 0)
-                            //invalid
-                            ? <CheckBoxOutlineBlankOutlinedIcon />
-                            //valid
-                            :(parseFloat(row.rating) <= 2)
-                            ? <LooksOneOutlinedIcon />
-                            :(parseFloat(row.rating) <= 4)
-                            ? <LooksTwoOutlinedIcon color="error"/>
-                            :(parseFloat(row.rating) <= 6)
-                            ?<Looks3OutlinedIcon color="warning"/>
-                            :(parseFloat(row.rating) <= 8)
-                            ?<Looks4OutlinedIcon color="#B6E824"/>
-                            :(parseFloat(row.rating) <= 10)
-                            ?<Looks5OutlinedIcon color="success"/>
-                            :<CheckBoxOutlineBlankOutlinedIcon/>
-                            }
-                        </ListItemIcon>
-                    </ListItemButton>
-                  ))}
-                  <ListItemButton onClick={(e) => loadMore(e)}>
-                    <ListItemText primary="Load More..." />
-                    <ListItemIcon edge="bottom">
-                        <KeyboardArrowDownIcon />
-                    </ListItemIcon>
-                  </ListItemButton>
-                </List>
-            ):(
-                //display selected exercise view for entering sets/reps, equipment, etc
-                <p>Selected</p>
-
-            )}
+            <Typography variant="h6">Before your workout</Typography>
+            <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',}} >                
+            
+            <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
+                <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
+                <NativeSelect variant="standard" value={thisWorkout.pickTargets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
+                {muscleTypes.map((row) => (
+                    <option value={row}>{row}</option>
+                ))}
+                </NativeSelect>
+            </Box>
+            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
+            <TextField 
+            id="datetime-local" 
+            label="Started at " 
+            type="datetime-local" 
+            required
+            sx={{ width: 250 }}
+            value={thisWorkout.startDate}
+            InputLabelProps={{shrink: true,}}
+            onChange={(e) => {setWorkout({
+                ...thisWorkout,
+                startDate: e.target.value})}} 
+            />
+            </Box>
+            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
+            <Typography variant="subtitle1">Notes: </Typography>
+            <FormControlLabel
+                control={<Checkbox id="yespre" value="yespre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="I took preworkout"
+            />
+            <FormControlLabel
+                control={<Checkbox id="nopre" value="nopre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="No preworkout"
+            />
+            <FormControlLabel
+                control={<Checkbox id="yesmeal" value="yesmeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="High carb meal before"
+            />
+            <FormControlLabel
+                control={<Checkbox id="nomeal" value="nomeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
+                label="Not enough food before"
+            />
+            <TextField 
+            id="other"
+            name="other"
+            label="Other: "
+            value={thisWorkout.other}
+            onChange={(e) => setWorkout({...thisWorkout,
+            other: e.target.value})}/>
+            <Box sx={{ pt: 4}}>
+            <Typography variant='subtitle1'>Sleep Quality: </Typography>
+            <Slider
+                aria-label="Sleep Quality"
+                value={thisWorkout.sleep}
+                valueLabelDisplay="auto"
+                min={0}
+                max={10}
+                track={false}
+                marks= {[{value: 0, label: 'Worst'}, {value: 10, label: 'Best'},]}
+                onChange= {(e) => setWorkout({...thisWorkout,
+                sleep: e.target.value})}
+            />
+            </Box>
+            </Box>
             </Box>
         </Container>
     </React.Fragment>);

@@ -24,6 +24,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Slider from '@mui/material/Slider';
 import { format } from 'date-fns';
 import { LogExercise } from "../layout/LogExercise";
+import { StartWorkout } from '../layout/StartWorkout';
 
 
 const TrackWorkout = () => {
@@ -45,79 +46,14 @@ const TrackWorkout = () => {
     finalNote: "",
 
   });
+
+
   const [stepFunctions, setStepFunctions] = useState([
     {
       condition: 0, 
       fn() {return(
-            <Container>
-            <Typography variant="h6">Before your workout</Typography>
-            <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',}} >                
-            
-            <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
-              <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
-              <NativeSelect variant="standard" value={thisWorkout.pickTargets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
-                {muscleTypes.map((row) => (
-                  <option value={row}>{row}</option>
-                ))}
-              </NativeSelect>
-            </Box>
-            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
-            <TextField 
-            id="datetime-local" 
-            label="Started at " 
-            type="datetime-local" 
-            required
-            sx={{ width: 250 }}
-            value={thisWorkout.startDate}
-            InputLabelProps={{shrink: true,}}
-            onChange={(e) => {setWorkout({
-              ...thisWorkout,
-              startDate: e.target.value})}} 
-            />
-            </Box>
-            <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
-            <Typography variant="subtitle1">Notes: </Typography>
-            <FormControlLabel
-                control={<Checkbox id="yespre" value="yespre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-                label="I took preworkout"
-            />
-            <FormControlLabel
-                control={<Checkbox id="nopre" value="nopre" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-                label="No preworkout"
-            />
-            <FormControlLabel
-                control={<Checkbox id="yesmeal" value="yesmeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-                label="High carb meal before"
-            />
-            <FormControlLabel
-                control={<Checkbox id="nomeal" value="nomeal" color="primary" onChange={(e) => setNote(e.target.value, e.target.checked)}/>}
-                label="Not enough food before"
-            />
-            <TextField 
-            id="other"
-            name="other"
-            label="Other: "
-            value={thisWorkout.other}
-            onChange={(e) => setWorkout({...thisWorkout,
-            other: e.target.value})}/>
-            <Box sx={{ pt: 4}}>
-            <Typography variant='subtitle1'>Sleep Quality: </Typography>
-            <Slider
-              aria-label="Sleep Quality"
-              value={thisWorkout.sleep}
-              valueLabelDisplay="auto"
-              min={0}
-              max={10}
-              track={false}
-              marks= {[{value: 0, label: 'Worst'}, {value: 10, label: 'Best'},]}
-              onChange= {(e) => setWorkout({...thisWorkout,
-              sleep: e.target.value})}
-            />
-            </Box>
-            </Box>
-          </Box>
+          <Container>
+            <StartWorkout />
           </Container>);},
       },
       {
@@ -167,36 +103,7 @@ const TrackWorkout = () => {
     setActiveStep(0);
   };
 
-  const toggleTarget = (target) => {
-    const thisArr = thisWorkout.pickTargets;
-    if(thisArr.includes(target)) {
-      thisArr.splice(thisArr.indexOf(target));
-    }
-    else {
-      thisArr.push(target);
-    }
-    setWorkout({
-      ...thisWorkout,
-      pickTargets: thisArr,});
-  }
-
-  const setNote = (note, checked) => {
-    //console.log("Note: " + content + ", Checked: " + checked);
-    //console.log("Old Notes: " + arr.toString());
-    const arr = thisWorkout.notes;
-    if(checked){
-        arr.push(note);
-    }
-    else{
-      if(arr.includes(note)){
-        arr.splice(arr.indexOf(note));
-      }
-    }
-    setWorkout({
-      ...thisWorkout,
-      notes: arr
-    });
-  }
+  
 
   useEffect(()=> {console.log("State changed: " + JSON.stringify(thisWorkout));
   console.log("Current auth: " + JSON.stringify(auth))},[thisWorkout])
