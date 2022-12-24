@@ -135,8 +135,10 @@ export const LogExercise = () => {
         else{
             console.log("Index is not default, add")
             let arr = exercises
-            arr.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]})
-            setExercises(arr);
+            let n = []
+            n.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]})
+            n = n.concat(arr);
+            setExercises(n);
 
         }
         console.log("Add complete");
@@ -269,17 +271,18 @@ export const LogExercise = () => {
             )}
             {(!Array.isArray(exercises))? (
                 <List>
-                    <p>{exercises?exercises.toString():"none"}</p>
+                    <ListItemText primary="No Exercises Yet"></ListItemText>
                     
                 </List>
-            ):(exercises[0].index !== -1)?(exercises.map((ex) => (
+            ):(exercises[0].index !== -1)?(
                 <List>
+                {exercises.map((ex) => (
                     <ExerciseDrawer exercise = {ex} />
-                    
+                ))}
                 </List>
-            ))): (
+            ): (
                 <List>
-                <ListItemText primary="No Exercises 2"></ListItemText>
+                <ListItemText primary="No Exercises Yet"></ListItemText>
                 
             </List>
             )
