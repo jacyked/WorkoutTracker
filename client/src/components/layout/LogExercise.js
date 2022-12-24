@@ -109,7 +109,7 @@ export const LogExercise = () => {
                 let arr = work.exercises;
                 if(!arr) console.log("Ex list Blank");
                 else{
-                    console.log("Ex list found, first index: " + arr[0].index)
+                    console.log("Ex list found: " + arr)
                     setExercises(arr);
                 }
             }catch(err){
@@ -134,7 +134,9 @@ export const LogExercise = () => {
         //otherwise, add to array
         else{
             console.log("Index is not default, add")
-            setExercises(exercises.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]}));
+            let arr = exercises
+            arr.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]})
+            setExercises(arr);
 
         }
         console.log("Add complete");
@@ -142,6 +144,7 @@ export const LogExercise = () => {
         let workout = JSON.parse(localStorage.getItem("workout"))
         workout = {...workout, exercises: exercises}
         localStorage.setItem("workout", JSON.stringify(workout));
+        console.log("Workout saved in local: " + JSON.parse(localStorage.getItem("workout")).exercises.toString());
       }
 
       useEffect(() => {
@@ -191,15 +194,7 @@ export const LogExercise = () => {
           controller.abort();
       }
     }, [])
-    const handleClick = (e) => {
-        let id = e.target.id;
-        console.log("Click toggle: " + id)
-        console.log("Open array: " + open.toString);
-        let arr = open;
-        arr[id] = !arr[id];
-        setOpen(arr);
-        console.log("Open array after: " + open.toString);
-      };
+
 
     return(
     <React.Fragment>
@@ -272,15 +267,21 @@ export const LogExercise = () => {
                 </React.Fragment>
 
             )}
-            {(exercises[0]?.index != -1)? (exercises.map((ex) => (
+            {(!Array.isArray(exercises))? (
+                <List>
+                    <p>{exercises?exercises.toString():"none"}</p>
+                    
+                </List>
+            ):(exercises[0].index !== -1)?(exercises.map((ex) => (
                 <List>
                     <ExerciseDrawer exercise = {ex} />
                     
                 </List>
-            ))):(
+            ))): (
                 <List>
-                    <ListItemText primary="No valid exercises to show"/>
-                </List>
+                <ListItemText primary="No Exercises 2"></ListItemText>
+                
+            </List>
             )
 
             }
