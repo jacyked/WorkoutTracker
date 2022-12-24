@@ -27,6 +27,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
+import ExerciseDrawer from "./ExerciseDrawer";
 
 
 const OFFSET = 5;
@@ -134,12 +135,6 @@ export const LogExercise = () => {
         else{
             console.log("Index is not default, add")
             setExercises(exercises.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]}));
-            let arr = new Array(exercises.length);
-            for (let i = 0; i < arr.length; i++){
-                arr[i] = false;
-            }
-            arr[arr.length - 1] = true;
-            setOpen(arr);
 
         }
         //console.log("Exercise list after function: " + JSON.stringify(exercises));
@@ -195,14 +190,11 @@ export const LogExercise = () => {
     const handleClick = (e) => {
         let id = e.target.id;
         console.log("Click toggle: " + id)
-        const arr = open;
-        if(arr.includes(id)){
-            let index = arr.indexOf(id);
-            if(arr[index])
-                arr[index] = false;
-            else
-                arr[index] = true;
-        }
+        console.log("Open array: " + open.toString);
+        let arr = open;
+        arr[id] = !arr[id];
+        setOpen(arr);
+        console.log("Open array after: " + open.toString);
       };
 
     return(
@@ -233,33 +225,8 @@ export const LogExercise = () => {
                 <List dense={true}>
                 {results.map((row) => (
                     <ListItemButton key={row._id} onClick={() => {
-                        console.log("Row before: " + JSON.stringify(selectedEx));
-                        setSelectedEx(row);
-                        console.log("Row after: " + JSON.stringify(selectedEx));
                         setSelected(true);
-                        console.log("Adding: " + row.fullName)
-                        console.log("To: " + JSON.stringify(exercises))
-                        //if default value, replace placeholder with new ex
-                        if(exercises[0].index === -1){
-                            
-                            let arr = [{index: 0, ex_id: row._id, name: row.fullName, sets: [{weight: 0, reps: 0}]}]
-                            console.log("Index is default, replace with " + JSON.stringify(arr))
-                            setExercises(arr);
-                            setOpen([true])
-                            console.log("Exercise list after replace: " + JSON.stringify(exercises));
-                        }
-                        //otherwise, add to array
-                        else{
-                            console.log("Index is not default, add")
-                            setExercises(exercises.push({index: exercises.length, ex_id: row._id, name: row.fullName, sets: [{weight: 0, reps: 0}]}));
-                            let arr = new Array(exercises.length);
-                            for (let i = 0; i < arr.length; i++){
-                                arr[i] = false;
-                            }
-                            arr[arr.length - 1] = true;
-                            setOpen(arr);
-
-                        }
+                        addEx(row);
                     }}>
                       <ListItemText primary={row.fullName}  secondary={<React.Fragment><div>Targets:  {row.mainMuscleName} </div><div>Equipment: {row?.equipmentTypes?.toString()}</div></React.Fragment>}/>
                         <ListItemIcon edge="end">
@@ -297,25 +264,14 @@ export const LogExercise = () => {
             ):(
                 //display selected exercise view for entering sets/reps, equipment, etc
                 <List>
-                    <ListItemText primary= {"Adding : " + selectedEx.fullName}/>
+                    <p>Placeholder</p>
                 </List>
 
             )}
             {(exercises[0].index != -1)? (exercises.map((ex) => (
                 <List>
-                    <ListItemButton id={ex.index} value={ex.index} onClick={handleClick}>
-                      <ListItemText primary={ex.name} />
-                      {open[ex.index] ? <ExpandLess id={ex.index}/> : <ExpandMore id={ex.index}/>}
-                    </ListItemButton>
-                    <Collapse in={open[ex.index]} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        {ex.sets.forEach((set, i) => (
-                            <ListItemButton sx={{ pl: 4 }} id={ex.index}>
-                            <ListItemText primary= {set.weight + " x " + set.reps} />
-                            </ListItemButton>
-                        ))}
-                      </List>
-                    </Collapse>
+                    <ExerciseDrawer exercise = {ex} />
+                    
                 </List>
             ))):(
                 <List>
