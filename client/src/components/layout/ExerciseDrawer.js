@@ -11,6 +11,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
+import TextField from '@mui/material/TextField';
 
 
 export default function ExerciseDrawer(props) {
@@ -25,18 +26,15 @@ export default function ExerciseDrawer(props) {
     };
 
 return (
-<List>
+<List dense={true}>
     <ListItemButton onClick={handleClick}>
     <ListItemText primary={name} />
     {open ? <ExpandLess /> : <ExpandMore />}
     </ListItemButton>
     <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
+        <List component="div" disablePadding inset={true}>
             <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                    <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
+                <TextField type="number" label="weight"/> x <TextField type="number" label="reps" />
             </ListItemButton>
         </List>
     </Collapse>

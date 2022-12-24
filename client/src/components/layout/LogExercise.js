@@ -275,7 +275,7 @@ export const LogExercise = () => {
                     
                 </List>
             ):(exercises[0].index !== -1)?(
-                <List>
+                <List dense={true}>
                 {exercises.map((ex) => (
                     <ExerciseDrawer exercise = {ex} />
                 ))}
