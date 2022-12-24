@@ -1,6 +1,7 @@
 import axios from "../api/axios";
 import useAuth from "./useAuth";
 
+//TODO remove persist from local storage on logout OR make sure on login trust box checks for local storage object and determines state from that
 const useLogout = () => {
     const { setAuth } = useAuth();
 

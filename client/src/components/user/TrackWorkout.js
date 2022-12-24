@@ -42,13 +42,41 @@ const TrackWorkout = () => {
     other: '',
     sleep: 5,
     exCount: 1,
-    exercises: [{}],
+    exercises: [{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}],
     finalNote: "",
+    default: true,
 
   });
 
+  useEffect(() => {
+    console.log("UseEffect Triggered on TrackWorkout.");
+    if(thisWorkout?.default){
+      console.log("Default true, check in localstorage.");
+      
+      try{
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        if(!workout) throw new Error("Null")
+        console.log("Found and parsed. Setting to thisWorkout.");
+        workout.default = false;
+        setWorkout(workout);
+      }catch(err){
+        console.log("Not there or not able to parse. Create default in local");
+        setWorkout({...thisWorkout, default: false});
+        localStorage.setItem("workout", JSON.stringify(thisWorkout));
+      }
+    }
+    else{
+      console.log("Not default, checking for changes");
+      if(thisWorkout == JSON.parse(localStorage.getItem("workout"))){
+        console.log("No changes made, don't need to update");
+      }else{
+        console.log("Changes made, need to update")
+      }
+    }
+  }, [])
 
-  const [stepFunctions, setStepFunctions] = useState([
+
+  const stepFunctions = [
     {
       condition: 0, 
       fn() {return(
@@ -58,14 +86,14 @@ const TrackWorkout = () => {
       },
       {
       condition: 1,
-      fn(active, s){ return(<Container>
+      fn(){ return(<Container>
         <Typography variant="h6">Add Exercise</Typography>
-        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+        <Box sx={{p: {xs: 1, md: 3, lg: 4}, display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',}} >
 
-            <LogExercise recTargets = {thisWorkout.pickTargets}/>
-            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add Next Exercise</Button>
+            <LogExercise />
+
         </Box>
       </Container>);},
       },
@@ -87,7 +115,7 @@ const TrackWorkout = () => {
       </Container>);}
       },
 
-  ])
+  ];
   
 
   const handleNext = () => {
@@ -98,83 +126,16 @@ const TrackWorkout = () => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
   const submitWorkout = () => {
     console.log("Submitted");
+    localStorage.removeItem("workout");
     setActiveStep(0);
   };
-
-  
-
-  useEffect(()=> {console.log("State changed: " + JSON.stringify(thisWorkout));
-  console.log("Current auth: " + JSON.stringify(auth))},[thisWorkout])
-
-
-  function exToAdd(curStep, allSteps,){
-    console.log("Passed in current Step: " + curStep);
-    console.log("stepFunctions length: " + stepFunctions.length);
-    let s = "Conditions: "
-    stepFunctions.forEach((i) => (s = (s + i.condition + ", ")));
-    console.log(s);
-    const newStep = curStep + 1;
-    const stepList = stepFunctions
-    //for every step after current
-    const after = [];
-    for(let i = curStep; i < stepList.length; i++){
-      let t = stepList.pop();
-      t.condition = (t.condition + 1)
-      after.push(t);
-    }
-    console.log("Steps after current: " + after.length)
-    console.log("Current length of stepList before adding: " + stepList.length);
-    stepList.push({
-      condition: newStep,
-      fn(active, s){ return(<Container>
-        <Typography variant="h6">Add Exercise</Typography>
-        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',}} >
-          <LogExercise recTargets = {thisWorkout.pickTargets}/>
-            <Button id="addButton" name ="addButton" label="Add" onClick={() => exToAdd(active, s)}>Add Next Exercise</Button>
-            <Button color="error" variant="outlined" id="deleteButton" name ="deleteButton" label="Delete" onClick={() => exToDelete(active, s)}>Delete</Button>
-        </Box>
-      </Container>);}
-    });
-    console.log("Pushed new step, now stepList lengt: " + stepList.length);
-    let l = after.length;
-    for(let i = 0; i < l; i++){
-      let t = after.pop();
-      stepList.push(t);
-    }
-    console.log("No. of Steps: " + allSteps + ", Length after adding: " + stepList.length);
-    setSteps(allSteps + 1);
-    setStepFunctions(stepList);
-    stepFunctions.forEach((i) => {console.log(i.condition.toString())})
-    console.log("Steps after add should be: " + (allSteps + 1) );
-  }
-  function exToDelete(curStep, allSteps){
-    const after = [];
-    const stepList = stepFunctions;
-    for(let i = curStep; i < stepList.length; i++){
-      let t = stepList.pop();
-      t.condition = (t.condition - 1);
-      after.push(t);
-    }
-    stepList.pop();
-    let l = after.length;
-    for(let i = 0; i < l; i++){
-      let t = after.pop();
-      stepList.push(t);
-    }
-    setSteps(allSteps - 1);
-    setStepFunctions(stepList);
-
-
-  }
   
 
   const RenderStep = () => {
       console.log("Active Step: " + activeStep + " / " + (steps - 1) + ", Total: " + steps);
-      console.log("Length: " + stepFunctions.length);
       for(const { condition, fn} of stepFunctions){
         if(activeStep === condition){
           return(fn(activeStep, steps));
@@ -218,7 +179,7 @@ const TrackWorkout = () => {
                   steps={steps}
                   position="static"
                   activeStep={activeStep}
-                  sx={{ flexGrow: 1 }}
+                  sx={{ flexGrow: 1,}}
                     nextButton={
                       <Button size="small" onClick={(activeStep < (steps - 1))?handleNext:submitWorkout}>
                         {(activeStep === 0)?"Start":(activeStep === (steps - 2))?"Wrap Up":(activeStep === (steps-1))?"Save Workout":"Next"}

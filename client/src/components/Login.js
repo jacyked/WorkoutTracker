@@ -99,7 +99,7 @@ const Login = () => {
                         alignItems: 'center',
                     }}>
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <FitnessCenterIcon />
+                            <FitnessCenterIcon style={{transform: 'rotate(90deg)', color: '#fff'}}/>
                         </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in

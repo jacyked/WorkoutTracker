@@ -25,10 +25,8 @@ export const StartWorkout = (props) => {
     const { auth } = useAuth();
     const [thisWorkout, setWorkout] = useState({ 
         userID: auth?.currUser?._id,
-        startDate: format(new Date(), "yyyy-MM-dd hh:mm"), 
+        startDate: format(new Date(), "yyyy-MM-dd HH:mm"), 
         endDate: "", 
-        pickTargets: ["All"],
-        calcTargets: [],
         notes: [],
         other: '',
         sleep: 5,
@@ -37,19 +35,6 @@ export const StartWorkout = (props) => {
         finalNote: "",
     
       });
-
-    const toggleTarget = (target) => {
-        const thisArr = thisWorkout.pickTargets;
-        if(thisArr.includes(target)) {
-          thisArr.splice(thisArr.indexOf(target));
-        }
-        else {
-          thisArr.push(target);
-        }
-        setWorkout({
-          ...thisWorkout,
-          pickTargets: thisArr,});
-      }
     
       const setNote = (note, checked) => {
         //console.log("Note: " + content + ", Checked: " + checked);
@@ -69,10 +54,8 @@ export const StartWorkout = (props) => {
         });
       }
     
-    useEffect(()=>{
-        console.log("ThisWorkout updated within start");
-        console.log("Props: " + JSON.stringify(props));
-    }, [thisWorkout])
+
+
     
         
         
@@ -85,14 +68,6 @@ export const StartWorkout = (props) => {
             flexDirection: 'column',
             alignItems: 'center',}} >                
             
-            <Box sx={{p: {xs: 1, md: 2, lg: 3}}}>
-                <InputLabel variant="standard" htmlFor="targets">Desired Targets:</InputLabel>
-                <NativeSelect variant="standard" value={thisWorkout.pickTargets} inputProps={{name: 'targets', id: 'targets', multiple:true}} onChange={(e) => toggleTarget(e.target.value)}>
-                {muscleTypes.map((row) => (
-                    <option value={row}>{row}</option>
-                ))}
-                </NativeSelect>
-            </Box>
             <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
             <TextField 
             id="datetime-local" 
