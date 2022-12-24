@@ -46,7 +46,7 @@ export const LogExercise = () => {
     const axiosPrivate = useAxiosPrivate();
 
     const searchExercise = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         setLoading(true);
         setSelected(false);
         console.log("Searching for: " + findExercise);
@@ -60,8 +60,8 @@ export const LogExercise = () => {
                 }
             });
         //TODO if returned list < limit, add end of results flag
-        console.log("Request made for search");
-        console.log("Results: " + JSON.stringify(response.data));
+        console.log("Search returned successful");
+        //console.log("Results: " + JSON.stringify(response.data));
         const list = Array.from(response.data);
         list.forEach((i) => {
           console.log(i.fullName)})
@@ -137,7 +137,11 @@ export const LogExercise = () => {
             setExercises(exercises.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]}));
 
         }
-        //console.log("Exercise list after function: " + JSON.stringify(exercises));
+        console.log("Add complete");
+        console.log(JSON.stringify(exercises))
+        let workout = JSON.parse(localStorage.getItem("workout"))
+        workout = {...workout, exercises: exercises}
+        localStorage.setItem("workout", JSON.stringify(workout));
       }
 
       useEffect(() => {
@@ -263,12 +267,12 @@ export const LogExercise = () => {
                 </List>
             ):(
                 //display selected exercise view for entering sets/reps, equipment, etc
-                <List>
+                <React.Fragment>
                     <p>Placeholder</p>
-                </List>
+                </React.Fragment>
 
             )}
-            {(exercises[0].index != -1)? (exercises.map((ex) => (
+            {(exercises[0]?.index != -1)? (exercises.map((ex) => (
                 <List>
                     <ExerciseDrawer exercise = {ex} />
                     
