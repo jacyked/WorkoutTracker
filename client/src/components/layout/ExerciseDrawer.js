@@ -12,14 +12,16 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import TextField from '@mui/material/TextField';
+import { IconButton } from '@mui/material';
 
 
 export default function ExerciseDrawer(props) {
     const ex_id = props.exercise.ex_id;
+    const length = props.length;
     const index = props.exercise.index;
     const name = props.exercise.name;
     const sets = props.exercise.sets;
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState((index === (length - 1))?true:false);
   
     const handleClick = () => {
       setOpen(!open);
@@ -34,7 +36,7 @@ return (
     <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding inset={true}>
             <ListItemButton sx={{ pl: 4 }}>
-                <TextField type="number" label="weight"/> x <TextField type="number" label="reps" />
+                <TextField type="number" label="weight"/> x <TextField type="number" label="reps" /> <IconButton />
             </ListItemButton>
         </List>
     </Collapse>

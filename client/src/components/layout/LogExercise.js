@@ -265,7 +265,6 @@ export const LogExercise = () => {
             ):(
                 //display selected exercise view for entering sets/reps, equipment, etc
                 <React.Fragment>
-                    <p>Placeholder</p>
                 </React.Fragment>
 
             )}
@@ -277,7 +276,7 @@ export const LogExercise = () => {
             ):(exercises[0].index !== -1)?(
                 <List dense={true}>
                 {exercises.map((ex) => (
-                    <ExerciseDrawer exercise = {ex} />
+                    <ExerciseDrawer exercise = {ex} length = {exercises.length} />
                 ))}
                 </List>
             ): (
