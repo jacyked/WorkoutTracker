@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function ExerciseDrawer(props) {
     const ex_id = props.exercise.ex_id;
-    const length = props.length;
+    const length = props.count;
     const index = props.exercise.index;
     const name = props.exercise.name;
     const [sets, setSets] = useState(props.exercise.sets);
@@ -38,7 +38,17 @@ export default function ExerciseDrawer(props) {
             arr = [{weight, reps}]
         else
             arr.push({weight, reps});
+        
+        
         setSets(arr);
+        //Find in local
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        let thisEx = workout.exercises.findIndex(ex => ex.ex_id === ex_id);
+        console.log("ID " + ex_id + "Found at index " + thisEx);
+        workout.exercises[thisEx].sets = arr;
+        localStorage.setItem("workout", JSON.stringify(workout));
+
+
         setReps(0);
         setWeight(0);
 

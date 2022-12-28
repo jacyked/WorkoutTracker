@@ -130,6 +130,12 @@ export const LogExercise = () => {
             setExercises(arr);
             setOpen([true])
             console.log("Exercise list after replace: " + JSON.stringify(exercises));
+            console.log("Replace complete");
+            //console.log(JSON.stringify(exercises))
+            let workout = JSON.parse(localStorage.getItem("workout"))
+            workout = {...workout, exercises: arr}
+            localStorage.setItem("workout", JSON.stringify(workout));
+            console.log("Workout saved in local: " + JSON.stringify(JSON.parse(localStorage.getItem("workout")).exercises));
         }
         //otherwise, add to array
         else{
@@ -140,13 +146,15 @@ export const LogExercise = () => {
             n = n.concat(arr);
             setExercises(n);
 
+            console.log("Add complete");
+            console.log(JSON.stringify(n))
+            let workout = JSON.parse(localStorage.getItem("workout"))
+            workout = {...workout, exercises: n}
+            localStorage.setItem("workout", JSON.stringify(workout));
+            console.log("Workout saved in local: " + JSON.stringify(JSON.parse(localStorage.getItem("workout")).exercises));
+
         }
-        console.log("Add complete");
-        console.log(JSON.stringify(exercises))
-        let workout = JSON.parse(localStorage.getItem("workout"))
-        workout = {...workout, exercises: exercises}
-        localStorage.setItem("workout", JSON.stringify(workout));
-        console.log("Workout saved in local: " + JSON.parse(localStorage.getItem("workout")).exercises.toString());
+        
       }
 
       useEffect(() => {
@@ -276,7 +284,7 @@ export const LogExercise = () => {
             ):(exercises[0].index !== -1)?(
                 <List dense={true}>
                 {exercises.map((ex) => (
-                    <ExerciseDrawer exercise = {ex} length = {exercises.length} />
+                    <ExerciseDrawer exercise = {ex} count = {exercises.length} />
                 ))}
                 </List>
             ): (
