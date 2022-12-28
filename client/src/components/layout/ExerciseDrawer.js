@@ -70,7 +70,7 @@ return (
             <ListItemButton sx={{ pl: 4 }}>
                 <TextField type="number" label="weight" value={weight} onChange={(e) => {setWeight(e.target.value)}}/> <CloseIcon /> <TextField type="number" label="reps" value={reps} onChange={(e) => {setReps(e.target.value)}}/>
                 <IconButton edge="end" aria-label="add" colour="primary" onClick={() => {addSet(); console.log("Saving weight " + weight + " x reps " + reps)}}>
-                                <AddBoxIcon />
+                                <AddBoxIcon fontSize="large"/>
                 </IconButton> 
             </ListItemButton>
         </List>
