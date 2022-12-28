@@ -14,6 +14,7 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import TextField from '@mui/material/TextField';
 import { IconButton } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export default function ExerciseDrawer(props) {
@@ -37,7 +38,11 @@ export default function ExerciseDrawer(props) {
             arr = [{weight, reps}]
         else
             arr.push({weight, reps});
-        setSets(sets);
+        setSets(arr);
+        setReps(0);
+        setWeight(0);
+
+        
         
         //Update local storage at this point.
         
@@ -56,14 +61,14 @@ return (
                 <React.Fragment></React.Fragment>
             ):(!(sets[0].reps <= 0))?(
                 sets.map((set) => (
-                    <ListItemText primary={set.weight + " x " + set.reps}/>
+                    <ListItemText inset={true} primary={set.weight + " x " + set.reps}/>
                 ))
                 
             ): (
                 <React.Fragment></React.Fragment>
             )}
             <ListItemButton sx={{ pl: 4 }}>
-                <TextField type="number" label="weight" value={weight} onChange={(e) => {setWeight(e.target.value)}}/> x <TextField type="number" label="reps" value={reps} onChange={(e) => {setReps(e.target.value)}}/>
+                <TextField type="number" label="weight" value={weight} onChange={(e) => {setWeight(e.target.value)}}/> <CloseIcon /> <TextField type="number" label="reps" value={reps} onChange={(e) => {setReps(e.target.value)}}/>
                 <IconButton edge="end" aria-label="add" colour="primary" onClick={() => {addSet(); console.log("Saving weight " + weight + " x reps " + reps)}}>
                                 <AddBoxIcon />
                 </IconButton> 
