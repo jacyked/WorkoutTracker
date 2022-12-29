@@ -120,6 +120,7 @@ export const LogExercise = () => {
         }
       }
       const addEx = (ex) => {
+        //TODO FIX ISSUE, LOSING SETS WHEN ADD NEW EXERCISE. GRAB UPDATED LOCAL LIST BEFORE REPLACING 
         console.log("Adding: " + ex.fullName);
         console.log("To: " + JSON.stringify(exercises))
         //if default value, replace placeholder with new ex
@@ -140,7 +141,7 @@ export const LogExercise = () => {
         //otherwise, add to array
         else{
             console.log("Index is not default, add")
-            let arr = exercises
+            let arr = JSON.parse(localStorage.getItem("workout")).exercises;
             let n = []
             n.push({index: exercises.length, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]})
             n = n.concat(arr);
