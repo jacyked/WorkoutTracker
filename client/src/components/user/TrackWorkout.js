@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import TextField from '@mui/material/TextField';
-import { muscleTypes, equipmentTypes } from "../../constants";
+import { muscleTypes, equipmentTypes, SAVE_WO_URL } from "../../constants";
 import InputLabel from '@mui/material/InputLabel';
 import NativeSelect from '@mui/material/NativeSelect';
 import Checkbox from '@mui/material/Checkbox';
@@ -31,6 +31,7 @@ import { EndWorkout } from '../layout/EndWorkout';
 
 const TrackWorkout = () => {
   const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   const theme = useTheme();
   const navigate = useNavigate();
   const [isInit, setInit] = useState(false);
@@ -84,9 +85,20 @@ const TrackWorkout = () => {
   };
 
   //Save workout from localstorage to database, then direct user to homepage
-  const submitWorkout = () => {
+  const submitWorkout = async () => {
+    console.log("Save workout for: " + auth.currUser.username);
+    try{
+      const response = await axiosPrivate.post(SAVE_WO_URL, {
+        params: {
+          workout: localStorage.getItem("workout"),
+          //user: auth.currUser.username
+        }
+    });
+    }catch(err){
+      console.log("Unable to save workout to server. Saving backup to local storage");
+      localStorage.setItem("backup", localStorage.getItem("workout"));
+    }
     console.log("Submitted");
-
     localStorage.removeItem("workout");
     navigate("/");
   };

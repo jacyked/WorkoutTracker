@@ -3,10 +3,11 @@ export const BASE_URL = 'http://localhost:8080';
 //Backend Routes
 export const REGISTER_URL = "/register";
 export const LOGIN_URL = '/auth';
-export const USER_URL = "./user";
+export const USER_URL = "/user";
 export const ALLEX_URL="/exercises";
 export const EX_URL="/exercises/search/";
 export const SEARCH_EX_URL = '/exercises/search'
+export const SAVE_WO_URL='/user/savewo'
 //Regex strings
 export const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 export const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
