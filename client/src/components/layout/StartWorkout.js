@@ -30,18 +30,23 @@ export const StartWorkout = (props) => {
 
 
     const setNote = (note, checked) => {
-        //console.log("Note: " + content + ", Checked: " + checked);
-        //console.log("Old Notes: " + arr.toString());
+        console.log("Note: " + note + ", Checked: " + checked);
+        
         const arr = notes;
+        console.log("Old Notes: " + arr.toString());
         if(checked){
             arr.push(note);
         }
         else{
           if(arr.includes(note)){
-            arr.splice(arr.indexOf(note));
+            arr.splice(arr.indexOf(note), 1);
           }
         }
+        console.log("New notes: " + arr);
         setNotes(arr);
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        workout.notes = arr;
+        localStorage.setItem("workout", JSON.stringify(workout));
     }
 
     useEffect(() => {
