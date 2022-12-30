@@ -44,7 +44,7 @@ export const EndWorkout = (props) => {
             InputLabelProps={{shrink: true,}}
             onChange={(e) => {setEnd(e.target.value)}} 
             />
-            {error ? (<p><strong>Invalid date: </strong> End date/time must be after Start date/time: {startDate} </p>) : (<p><strong>Duration: </strong> Start : {startDate} End : {endDate} Diff : {differenceInMinutes(new Date(endDate), new Date(startDate))}</p>)}
+            {error ? (<p><strong>Invalid date: </strong> End date/time must be after Start date/time: {startDate} </p>) : (<p><strong>Duration: </strong>{differenceInMinutes(new Date(endDate), new Date(startDate))} minutes</p>)}
             <TextareaAutosize 
             id="finalNote"
             name="finalNote"

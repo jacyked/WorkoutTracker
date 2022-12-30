@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { muscleTypes, equipmentTypes, SEARCH_EX_URL } from "../../constants";
-
+import { SEARCH_EX_URL } from "../../constants";
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { ListItem, Typography } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import { InputAdornment } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
@@ -26,9 +22,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
 import ExerciseDrawer from "./ExerciseDrawer";
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
 
 

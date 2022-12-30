@@ -1,19 +1,18 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Typography } from '@mui/material';
-import { format, differenceInMinutes } from 'date-fns';
+import { differenceInMinutes } from 'date-fns';
 import useAuth from '../../hooks/useAuth';
 
 const WorkoutList = (props) => {
   const { auth } = useAuth();
   const list = auth.currUser.workoutList ;
   //console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
-  
+
   function compareWorkout(a, b){
     let dateA = new Date(a.startDate)
     let dateB = new Date(b.startDate)

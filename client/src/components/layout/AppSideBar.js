@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import MuiDrawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { MainListItems, SecondaryListItems } from "./ListItems.js";
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { styled } from '@mui/material/styles';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-
-import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Tooltip from '@mui/material/Tooltip';
