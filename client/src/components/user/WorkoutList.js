@@ -13,6 +13,16 @@ const WorkoutList = (props) => {
   const { auth } = useAuth();
   const list = auth.currUser.workoutList ;
   //console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
+  
+  function compareWorkout(a, b){
+    let dateA = new Date(a.startDate)
+    let dateB = new Date(b.startDate)
+    if(dateA < dateB)
+      return -1
+    if(dateA > dateB)
+      return 1
+    return 0
+  }
 
 
 

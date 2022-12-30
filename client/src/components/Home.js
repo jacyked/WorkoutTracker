@@ -63,6 +63,7 @@ const Home = () => {
   
   function DashboardContent(props) {
     const workoutList = useState(props.workoutList)
+
   
     return (
       
