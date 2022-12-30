@@ -16,6 +16,7 @@ import { USER_URL } from '../constants';
 
 const Home = () => {
     const [thisUser, setUser] = useState();
+    const [workoutList, setWorkoutList] = useState();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
   
@@ -23,18 +24,20 @@ const Home = () => {
   
     useEffect(() => {
       let isMounted = true;
+      console.log("Fired: Home");
       const controller = new AbortController();
       console.log(JSON.stringify(auth));
-      if(!auth?.currUser){
+     
         const getUser = async() => {
             try{
                 //All User routes removed the signal in axios request. may want to reinstate
                 const response = await axiosPrivate.get(USER_URL, {
                     signal: controller.signal
                 });
-                console.log("Fired: Home");
+                
                 console.log("DATA: " + JSON.stringify(response.data));
                 isMounted && setUser(response.data);
+                setWorkoutList(response.data.workoutList)
                 //setAuth({...auth.prev, curUser: response.data});
                 //console.log("User: " + JSON.stringify(response.data));
                 
@@ -44,9 +47,6 @@ const Home = () => {
   
         }
         getUser();
-        }else{
-            setUser(auth.currUser);
-        }
       return () => {
             console.log("cleanup, aborting home axios. ");
           isMounted = false;
@@ -55,21 +55,14 @@ const Home = () => {
     }, [])
   
       return (
-          <DashboardContent user = {thisUser}/>
+          <DashboardContent workoutList = {workoutList}/>
       );
   }
   
   
   
   function DashboardContent(props) {
-    let workoutList = [];
-    try{
-      
-      workoutList = props.user.workoutList
-      console.log("Trying to grab workoutlist " + workoutList)
-    }catch(err){
-        workoutList = [];
-    }
+    const workoutList = useState(props.workoutList)
   
     return (
       
