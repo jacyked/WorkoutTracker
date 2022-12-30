@@ -227,10 +227,10 @@ export const LogExercise = () => {
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton aria-label="search" colour="primary" onClick={(e) => searchExercise(e)}>
+                            <IconButton aria-label="search" color="primary" onClick={(e) => searchExercise(e)}>
                                 <SearchIcon />
                             </IconButton> 
-                            <IconButton aria-label="hide" colour="secondary" onClick={() => toggleResults()}>
+                            <IconButton aria-label="hide" onClick={() => toggleResults()}>
                                 {!selected ? <ExpandLess /> : <ExpandMore />}
                             </IconButton>
                         </InputAdornment>
@@ -275,7 +275,7 @@ export const LogExercise = () => {
                             }
                         </ListItemIcon>
                         
-                        <IconButton edge="end" aria-label="add" colour="primary">
+                        <IconButton edge="end" aria-label="add" color="primary">
                                 <AddBoxIcon />
                         </IconButton> 
                         

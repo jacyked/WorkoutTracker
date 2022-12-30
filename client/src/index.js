@@ -10,7 +10,7 @@ let theme = createTheme({
   type: 'dark',
   palette: {
     primary: {
-      main: '#464646',
+      main: '#008bff',
     },
     secondary: {
       main: '#008bff',
