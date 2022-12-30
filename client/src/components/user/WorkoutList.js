@@ -11,15 +11,15 @@ import useAuth from '../../hooks/useAuth';
 
 const WorkoutList = (props) => {
   const { auth } = useAuth();
-  const list = auth.currUser.workoutList;
-  console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
+  const list = auth.currUser.workoutList ;
+  //console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
 
 
 
     return (
         <React.Fragment>
             <Typography component="h4" variant="h5">Recent Workouts</Typography>
-      <Table size="small">
+      <Table size="small" >
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
@@ -32,8 +32,8 @@ const WorkoutList = (props) => {
           list.map((row) => (
             <TableRow key={JSON.parse(row)._id}>
               <TableCell>{JSON.parse(row).startDate}</TableCell>
-              <TableCell>Targets</TableCell>
-              <TableCell>{differenceInMinutes(new Date(JSON.parse(row).endDate), new Date(JSON.parse(row).startDate))} Minutes</TableCell>
+              <TableCell>{JSON.parse(row).targets.map((targ) => (targ + ", "))}</TableCell>
+              <TableCell>{differenceInMinutes(new Date(JSON.parse(row).endDate), new Date(JSON.parse(row).startDate))} min</TableCell>
             </TableRow>
           )
           )):(   

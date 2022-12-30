@@ -122,9 +122,8 @@ export const LogExercise = () => {
         }
       }
       const addEx = (ex) => {
-        //TODO FIX ISSUE, LOSING SETS WHEN ADD NEW EXERCISE. GRAB UPDATED LOCAL LIST BEFORE REPLACING 
-        console.log("Adding: " + ex.fullName);
-        console.log("To: " + JSON.stringify(exercises))
+        //console.log("Adding: " + ex.fullName);
+        //console.log("To: " + JSON.stringify(exercises))
         //if default value, replace placeholder with new ex
         if(exercises[0].index === -1){
             
@@ -137,6 +136,7 @@ export const LogExercise = () => {
             //console.log(JSON.stringify(exercises))
             let workout = JSON.parse(localStorage.getItem("workout"))
             workout = {...workout, exercises: arr}
+            workout.targets = [ex.mainMuscleName];
             localStorage.setItem("workout", JSON.stringify(workout));
             console.log("Workout saved in local: " + JSON.stringify(JSON.parse(localStorage.getItem("workout")).exercises));
         }
@@ -153,6 +153,9 @@ export const LogExercise = () => {
             console.log(JSON.stringify(n))
             let workout = JSON.parse(localStorage.getItem("workout"))
             workout = {...workout, exercises: n}
+            if(!(workout.targets.includes(ex.mainMuscleName))){
+                workout.targets.push(ex.mainMuscleName);
+            }
             localStorage.setItem("workout", JSON.stringify(workout));
             console.log("Workout saved in local: " + JSON.stringify(JSON.parse(localStorage.getItem("workout")).exercises));
 

@@ -90,6 +90,7 @@ const TrackWorkout = () => {
     try{
       const response = await axiosPrivate.post(SAVE_WO_URL, {
           workout: localStorage.getItem("workout"),
+        
     });
     }catch(err){
       console.log("Unable to save workout to server. Saving backup to local storage");
@@ -134,6 +135,7 @@ const TrackWorkout = () => {
           other: '',
           sleep: '',
           exercises: [{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}],
+          targets: [],
           finalNote: "",
           default: true,
         }
