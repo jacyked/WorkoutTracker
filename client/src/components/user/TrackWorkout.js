@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from '../../hooks/useAuth';
@@ -29,55 +30,15 @@ import { EndWorkout } from '../layout/EndWorkout';
 
 
 const TrackWorkout = () => {
-  const theme = useTheme();
-  const [isInit, setInit] = useState(false);
   const { auth } = useAuth();
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const [isInit, setInit] = useState(false);
   const [steps, setSteps] = useState(3);
   const [activeStep, setActiveStep] = useState(0);
-  const [thisWorkout, setWorkout] = useState({ 
-    userID: auth?.currUser?._id,
-    startDate: "", 
-    endDate: "", 
-    pickTargets: ["All"],
-    calcTargets: [],
-    notes: [],
-    other: '',
-    sleep: 5,
-    exCount: 1,
-    exercises: [{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}],
-    finalNote: "",
-    default: true,
+  const [thisWorkout, setWorkout] = useState();
 
-  });
-
-  useEffect(() => {
-    console.log("UseEffect Triggered on TrackWorkout.");
-    if(thisWorkout?.default){
-      console.log("Default true, check in localstorage.");
-      
-      try{
-        let workout = JSON.parse(localStorage.getItem("workout"));
-        if(!workout) throw new Error("Null")
-        console.log("Found and parsed. Setting to thisWorkout.");
-        workout.default = false;
-        setWorkout(workout);
-      }catch(err){
-        console.log("Not there or not able to parse. Create default in local");
-        setWorkout({...thisWorkout, default: false});
-        localStorage.setItem("workout", JSON.stringify(thisWorkout));
-      }
-    }
-    else{
-      console.log("Not default, checking for changes");
-      if(thisWorkout == JSON.parse(localStorage.getItem("workout"))){
-        console.log("No changes made, don't need to update");
-      }else{
-        console.log("Changes made, need to update")
-      }
-    }
-  }, [])
-
-
+  //Corresponding page for each step
   const stepFunctions = [
     {
       condition: 0, 
@@ -112,7 +73,6 @@ const TrackWorkout = () => {
       },
 
   ];
-  
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -123,13 +83,15 @@ const TrackWorkout = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  //Save workout from localstorage to database, then direct user to homepage
   const submitWorkout = () => {
     console.log("Submitted");
+
     localStorage.removeItem("workout");
-    setActiveStep(0);
+    navigate("/");
   };
   
-
+//Determines which step to display based on activate step stored in state
   const RenderStep = () => {
       console.log("Active Step: " + activeStep + " / " + (steps - 1) + ", Total: " + steps);
       for(const { condition, fn} of stepFunctions){
@@ -140,21 +102,24 @@ const TrackWorkout = () => {
       }
   
   }
+
   const init = () => {
     console.log("Init Fired in trackWorkout ")
     if (!isInit){
+      console.log("Init false, proceed")
       //Check if workout has been started in local. 
       //TODO impliment a "Workout has been started but not saved, continue/discard" popup if found in local
       let workout = JSON.parse(localStorage.getItem("workout"))
       // If found, save in state
       if(workout){
         setWorkout(workout)
+        console.log("Workout found in local, saving to state. ")
       }
       //If not found, create, save in storage, and then save in state
       else{
         let workout = {
           userID: auth?.currUser?._id,
-          startDate: "", 
+          startDate: format(new Date(), "yyyy-MM-dd HH:mm"), 
           endDate: "", 
           notes: [],
           other: '',
@@ -165,6 +130,7 @@ const TrackWorkout = () => {
         }
         localStorage.setItem("workout", JSON.stringify(workout));
         setWorkout(workout);
+        console.log("No workout in local, created and now saved. ");
       }
 
       setInit(true)

@@ -22,24 +22,11 @@ import Slider from '@mui/material/Slider';
 import { format } from 'date-fns';
 
 export const StartWorkout = (props) => {
-    const { auth } = useAuth();
-    const [thisWorkout, setWorkout] = useState({ 
-        userID: auth?.currUser?._id,
-        startDate: format(new Date(), "yyyy-MM-dd HH:mm"), 
-        endDate: "", 
-        notes: [],
-        other: '',
-        sleep: 5,
-        exCount: 1,
-        exercises: [{}],
-        finalNote: "",
-    
-      });
       
     const [startDate, setStart] = useState(JSON.parse(localStorage.getItem("workout")).startDate || format(new Date(), "yyyy-MM-dd HH:mm"));
     const [notes, setNotes] = useState(JSON.parse(localStorage.getItem("workout")).notes || [])
     const [other, setOther] = useState(JSON.parse(localStorage.getItem("workout")).other || "")
-    const [sleep, setSleep] = useState(JSON.parse(localStorage.getItem("workout")).other || "")
+    const [sleep, setSleep] = useState(JSON.parse(localStorage.getItem("workout")).sleep || 5)
 
 
     const setNote = (note, checked) => {
@@ -54,11 +41,34 @@ export const StartWorkout = (props) => {
             arr.splice(arr.indexOf(note));
           }
         }
-        setWorkout({
-          ...thisWorkout,
-          notes: arr
-        });
-      }
+        setNotes(arr);
+    }
+
+    useEffect(() => {
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        workout.notes = notes;
+        localStorage.setItem("workout", JSON.stringify(workout));
+    }, [notes])
+
+    useEffect(() => {
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        workout.startDate = startDate;
+        localStorage.setItem("workout", JSON.stringify(workout));
+    }, [startDate])
+
+    useEffect(() => {
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        workout.other = other;
+        localStorage.setItem("workout", JSON.stringify(workout));
+    }, [other])
+
+    useEffect(() => {
+        let workout = JSON.parse(localStorage.getItem("workout"));
+        workout.sleep = sleep;
+        localStorage.setItem("workout", JSON.stringify(workout));
+    }, [sleep])
+
+
     
     return(
     <React.Fragment>
@@ -75,11 +85,9 @@ export const StartWorkout = (props) => {
             type="datetime-local" 
             required
             sx={{ width: 250 }}
-            value={thisWorkout.startDate}
+            value={startDate}
             InputLabelProps={{shrink: true,}}
-            onChange={(e) => {setWorkout({
-                ...thisWorkout,
-                startDate: e.target.value})}} 
+            onChange={(e) => {setStart(e.target.value)}} 
             />
             </Box>
             <Box sx={{ p: {xs: 2, md: 3, lg: 4}}}>
@@ -104,21 +112,19 @@ export const StartWorkout = (props) => {
             id="other"
             name="other"
             label="Other: "
-            value={thisWorkout.other}
-            onChange={(e) => setWorkout({...thisWorkout,
-            other: e.target.value})}/>
+            value={other}
+            onChange={(e) => setOther(e.target.value)}/>
             <Box sx={{ pt: 4}}>
             <Typography variant='subtitle1'>Sleep Quality: </Typography>
             <Slider
                 aria-label="Sleep Quality"
-                value={thisWorkout.sleep}
+                value={sleep}
                 valueLabelDisplay="auto"
                 min={0}
                 max={10}
                 track={false}
                 marks= {[{value: 0, label: 'Worst'}, {value: 10, label: 'Best'},]}
-                onChange= {(e) => setWorkout({...thisWorkout,
-                sleep: e.target.value})}
+                onChange= {(e) => setSleep(e.target.value)}
             />
             </Box>
             </Box>
