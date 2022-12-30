@@ -64,7 +64,9 @@ const Home = () => {
   function DashboardContent(props) {
     let workoutList = [];
     try{
+      
       workoutList = props.user.workoutList
+      console.log("Trying to grab workoutlist " + workoutList)
     }catch(err){
         workoutList = [];
     }

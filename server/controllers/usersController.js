@@ -32,15 +32,15 @@ const saveWO = async (req, res) => {
     const user = await User.findOne({ username: req.user }).exec();
     //console.log("Searching for user: ", JSON.stringify(req.id))
     if (!user) {
-        console.log("No User found.")
+        //console.log("No User found.")
         return res.status(204).json({ 'message': `Username ${req.user} not found` });
     }
     //Add workout to user then save
-    console.log("User found.")
+    //console.log("User found.")
     let arr = user.workoutList;
     arr.push(req.body.workout);
     const update = await User.findOneAndUpdate({ username: req.user }, {workoutList: arr}, { new: true})
-    console.log("User updated: ", JSON.stringify(update))
+    //console.log("User updated: ", JSON.stringify(update))
     
     res.json(update);
 }

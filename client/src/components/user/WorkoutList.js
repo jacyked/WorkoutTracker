@@ -6,26 +6,14 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Typography } from '@mui/material';
+import { format, differenceInMinutes } from 'date-fns';
+import useAuth from '../../hooks/useAuth';
 
 const WorkoutList = (props) => {
-    let list = [];
-    try{
-        list = props?.workoutList;
-        if(!list)
-            list.push({ id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'});
-        else{
-            list.forEach((row) =>{
-                row = {
-                    id: row.id,
-                    targets: row.targets,
-                    length: row.length
-                }
-            });
-        }
-    }catch(err){
-        list = []
-        list.push({ id: 0, date: 'N/A', targets: 'Record a workout to get started!', length: 'N/A'});
-    }
+  const { auth } = useAuth();
+  const list = auth.currUser.workoutList;
+  console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
+
 
 
     return (
@@ -40,13 +28,21 @@ const WorkoutList = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.targets}</TableCell>
-              <TableCell>{row.length}</TableCell>
+          {(Array.isArray(list) && (list.length > 0))?(
+          list.map((row) => (
+            <TableRow key={JSON.parse(row)._id}>
+              <TableCell>{JSON.parse(row).startDate}</TableCell>
+              <TableCell>Targets</TableCell>
+              <TableCell>{differenceInMinutes(new Date(JSON.parse(row).endDate), new Date(JSON.parse(row).startDate))} Minutes</TableCell>
             </TableRow>
-          ))}
+          )
+          )):(   
+            <TableRow>
+            <TableCell> </TableCell>
+            <TableCell> </TableCell>
+            <TableCell> </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
         </React.Fragment>
