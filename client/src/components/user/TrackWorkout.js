@@ -25,16 +25,18 @@ import Slider from '@mui/material/Slider';
 import { format } from 'date-fns';
 import { LogExercise } from "../layout/LogExercise";
 import { StartWorkout } from '../layout/StartWorkout';
+import { EndWorkout } from '../layout/EndWorkout';
 
 
 const TrackWorkout = () => {
   const theme = useTheme();
+  const [isInit, setInit] = useState(false);
   const { auth } = useAuth();
   const [steps, setSteps] = useState(3);
   const [activeStep, setActiveStep] = useState(0);
   const [thisWorkout, setWorkout] = useState({ 
     userID: auth?.currUser?._id,
-    startDate: format(new Date(), "yyyy-MM-dd hh:mm"), 
+    startDate: "", 
     endDate: "", 
     pickTargets: ["All"],
     calcTargets: [],
@@ -101,16 +103,10 @@ const TrackWorkout = () => {
       condition: steps - 1,
       fn(){return(<Container>
         <Typography variant="h6">Summary </Typography>
-        <Box sx={{p: {xs: 2, md: 3, lg: 4}, display: 'flex',
+        <Box sx={{p: {xs: 1, md: 3, lg: 4}, display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',}} >
-          <TextField 
-            id="finalNote"
-            name="finalNote"
-            label="Final Notes: "
-            value={thisWorkout.finalNote}
-            onChange={(e) => setWorkout({...thisWorkout,
-            finalNote: e.target.value})}/>
+            <EndWorkout />
         </Box>
       </Container>);}
       },
@@ -144,9 +140,41 @@ const TrackWorkout = () => {
       }
   
   }
+  const init = () => {
+    console.log("Init Fired in trackWorkout ")
+    if (!isInit){
+      //Check if workout has been started in local. 
+      //TODO impliment a "Workout has been started but not saved, continue/discard" popup if found in local
+      let workout = JSON.parse(localStorage.getItem("workout"))
+      // If found, save in state
+      if(workout){
+        setWorkout(workout)
+      }
+      //If not found, create, save in storage, and then save in state
+      else{
+        let workout = {
+          userID: auth?.currUser?._id,
+          startDate: "", 
+          endDate: "", 
+          notes: [],
+          other: '',
+          sleep: '',
+          exercises: [{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}],
+          finalNote: "",
+          default: true,
+        }
+        localStorage.setItem("workout", JSON.stringify(workout));
+        setWorkout(workout);
+      }
+
+      setInit(true)
+    }
+    return(<React.Fragment></React.Fragment>)
+  }
 
     return (
       <React.Fragment>
+        {init()}
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppSideBar title = "Track a Workout"/>
@@ -182,7 +210,7 @@ const TrackWorkout = () => {
                   sx={{ flexGrow: 1,}}
                     nextButton={
                       <Button size="small" onClick={(activeStep < (steps - 1))?handleNext:submitWorkout}>
-                        {(activeStep === 0)?"Start":(activeStep === (steps - 2))?"Wrap Up":(activeStep === (steps-1))?"Save Workout":"Next"}
+                        {(activeStep === 0)?"Start":(activeStep === (steps - 2))?"Wrap Up":(activeStep === (steps-1))?"Save":"Next"}
                         {theme.direction === 'rtl' ? (
                           <KeyboardArrowLeft />
                         ) : (

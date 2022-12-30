@@ -28,6 +28,8 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import ExerciseDrawer from "./ExerciseDrawer";
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+
 
 
 const OFFSET = 5;
@@ -157,6 +159,14 @@ export const LogExercise = () => {
         }
         
       }
+      const toggleResults = () => {
+        if(selected){
+            setSelected(false)
+        }
+        else{
+            setSelected(true)
+        }
+      }
 
       useEffect(() => {
         console.log("State changed, current ex list: " + JSON.stringify(exercises));
@@ -217,6 +227,9 @@ export const LogExercise = () => {
                             <IconButton aria-label="search" colour="primary" onClick={(e) => searchExercise(e)}>
                                 <SearchIcon />
                             </IconButton> 
+                            <IconButton aria-label="hide" colour="secondary" onClick={() => toggleResults()}>
+                                {!selected ? <ExpandLess /> : <ExpandMore />}
+                            </IconButton>
                         </InputAdornment>
                     ),
                 }} 
@@ -225,6 +238,7 @@ export const LogExercise = () => {
             label="Add Exercise "
             value={findExercise}
             onChange={(e) => setFindExercise(e.target.value)}/>
+
             <Box>
             {(loading)
             ?(

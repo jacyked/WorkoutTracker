@@ -35,11 +35,17 @@ export const StartWorkout = (props) => {
         finalNote: "",
     
       });
-    
-      const setNote = (note, checked) => {
+      
+    const [startDate, setStart] = useState(JSON.parse(localStorage.getItem("workout")).startDate || format(new Date(), "yyyy-MM-dd HH:mm"));
+    const [notes, setNotes] = useState(JSON.parse(localStorage.getItem("workout")).notes || [])
+    const [other, setOther] = useState(JSON.parse(localStorage.getItem("workout")).other || "")
+    const [sleep, setSleep] = useState(JSON.parse(localStorage.getItem("workout")).other || "")
+
+
+    const setNote = (note, checked) => {
         //console.log("Note: " + content + ", Checked: " + checked);
         //console.log("Old Notes: " + arr.toString());
-        const arr = thisWorkout.notes;
+        const arr = notes;
         if(checked){
             arr.push(note);
         }
@@ -54,12 +60,6 @@ export const StartWorkout = (props) => {
         });
       }
     
-
-
-    
-        
-        
-
     return(
     <React.Fragment>
         <Container>

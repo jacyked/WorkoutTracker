@@ -83,7 +83,7 @@ return (
                 <React.Fragment></React.Fragment>
             ):(!(sets[0].reps <= 0))?(
                 sets.map((set) => (
-                    <ListItemText inset={true} primary={set.weight + " " + WEIGHTUNIT + " x " + set.reps}/>
+                    <ListItemText inset={true} primary={set.weight + " " + WEIGHTUNIT + " x " + set.reps + " reps"}/>
                 ))
                 
             ): (
