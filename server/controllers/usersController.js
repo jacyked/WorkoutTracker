@@ -26,14 +26,23 @@ const getUser = async (req, res) => {
     res.json(user);
 }
 const saveWO = async (req, res) => {
-    console.log("Fetching user: ", JSON.stringify(req.user));
+    console.log("Fetching user: ", JSON.stringify(req.user), ", Workout: ", (req.body.workout));
+    //console.log(req.params.workout)
     if (!req?.user) return res.status(400).json({ "message": 'Username required' });
-    const user = await User.findOne({ _id: req.id }).exec();
+    const user = await User.findOne({ username: req.user }).exec();
+    //console.log("Searching for user: ", JSON.stringify(req.id))
     if (!user) {
+        console.log("No User found.")
         return res.status(204).json({ 'message': `Username ${req.user} not found` });
     }
     //Add workout to user then save
-    res.json(user);
+    console.log("User found.")
+    let arr = user.workoutList;
+    arr.push(req.body.workout);
+    const update = await User.findOneAndUpdate({ username: req.user }, {workoutList: arr}, { new: true})
+    console.log("User updated: ", JSON.stringify(update))
+    
+    res.json(update);
 }
 module.exports = {
     getAllUsers,
