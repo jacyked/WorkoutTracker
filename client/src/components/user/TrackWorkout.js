@@ -20,7 +20,8 @@ import { LogExercise } from "../layout/LogExercise";
 import { StartWorkout } from '../layout/StartWorkout';
 import { EndWorkout } from '../layout/EndWorkout';
 
-
+//Container of track workout flow
+//Controles step with associated page, as well as initiate/submit workout 
 const TrackWorkout = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
@@ -93,7 +94,7 @@ const TrackWorkout = () => {
     navigate("/");
   };
   
-//Determines which step to display based on activate step stored in state
+//Determines which step to display based on active step stored in state
   const RenderStep = () => {
       console.log("Active Step: " + activeStep + " / " + (steps - 1) + ", Total: " + steps);
       for(const { condition, fn} of stepFunctions){
@@ -105,6 +106,7 @@ const TrackWorkout = () => {
   
   }
 
+  //Initial loading of workout to/from localStorage.
   const init = () => {
     console.log("Init Fired in trackWorkout ")
     if (!isInit){

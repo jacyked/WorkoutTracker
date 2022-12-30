@@ -8,6 +8,8 @@ import { Typography } from '@mui/material';
 import { differenceInMinutes } from 'date-fns';
 import useAuth from '../../hooks/useAuth';
 
+//Display recent workouts. 
+//TODO add sorting (most recent first), add view all button
 const WorkoutList = (props) => {
   const { auth } = useAuth();
   const list = auth.currUser.workoutList ;

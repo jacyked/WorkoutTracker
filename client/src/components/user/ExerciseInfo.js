@@ -14,7 +14,7 @@ import useAuth from '../../hooks/useAuth';
 import LinearProgress from '@mui/material/LinearProgress';
 import { EX_URL } from '../../constants';
 
-
+//Display individual exercise details when selected
 const ExerciseInfo = (props) => {
     const { exID } = useParams();
     const [thisEx, setEx] = useState({

@@ -1,26 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Outlet } from "react-router-dom"
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import useAuth from '../../hooks/useAuth';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import TextField from '@mui/material/TextField';
-import { muscleTypes, equipmentTypes } from "../../constants";
-import InputLabel from '@mui/material/InputLabel';
-import NativeSelect from '@mui/material/NativeSelect';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Slider from '@mui/material/Slider';
 import { format } from 'date-fns';
 
+//First page for beginning track workout flow
+//Contains startDate, notes (check boxes and 'other' text input), and sleep quality
 export const StartWorkout = (props) => {
       
     const [startDate, setStart] = useState(JSON.parse(localStorage.getItem("workout")).startDate || format(new Date(), "yyyy-MM-dd HH:mm"));
@@ -28,7 +17,7 @@ export const StartWorkout = (props) => {
     const [other, setOther] = useState(JSON.parse(localStorage.getItem("workout")).other || "")
     const [sleep, setSleep] = useState(JSON.parse(localStorage.getItem("workout")).sleep || 5)
 
-
+    //Notes toggle for adding/removing from array
     const setNote = (note, checked) => {
         console.log("Note: " + note + ", Checked: " + checked);
         
@@ -48,25 +37,25 @@ export const StartWorkout = (props) => {
         workout.notes = arr;
         localStorage.setItem("workout", JSON.stringify(workout));
     }
-
+    //Update notes in localStorage when changed
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         workout.notes = notes;
         localStorage.setItem("workout", JSON.stringify(workout));
     }, [notes])
-
+    //Update startDate in localStorage when changed
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         workout.startDate = startDate;
         localStorage.setItem("workout", JSON.stringify(workout));
     }, [startDate])
-
+    //Update other in localStorage when changed
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         workout.other = other;
         localStorage.setItem("workout", JSON.stringify(workout));
     }, [other])
-
+    //Update sleep in localStorage when changed
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         workout.sleep = sleep;

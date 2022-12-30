@@ -29,8 +29,11 @@ import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
 import Looks4OutlinedIcon from '@mui/icons-material/Looks4Outlined';
 import Looks5OutlinedIcon from '@mui/icons-material/Looks5Outlined';
 
+//Page size of exercises to display
 const OFFSET = 10;
 
+//Condensed list of all exercises in database
+//Initially sorted by rating, able to filter results
 const Exercises = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [exList, setExList] = useState([{id: "", fullName: "", mainMuscleName: "", rating: ""}]);
