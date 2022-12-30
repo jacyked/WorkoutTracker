@@ -14,6 +14,7 @@ import useLogout from '../../hooks/useLogout';
 import { Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 
+//AppBar dropdown menu, main list
 export const MainListItems = () => (
   <React.Fragment>
     <MenuItem component={Link} to="/">
@@ -36,7 +37,7 @@ export const MainListItems = () => (
     </MenuItem>
   </React.Fragment>
 );
-
+//AppBar dropdown menu, secondary list
 export const SecondaryListItems = () => {
   const navigate = useNavigate();
   const logout = useLogout();

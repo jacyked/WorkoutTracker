@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
+//Top app bar for main user flow, calls dropdown menu from ListItems
 export const AppSideBar = (props) => { 
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);

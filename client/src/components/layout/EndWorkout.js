@@ -3,7 +3,8 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { format, differenceInMinutes } from 'date-fns';
 import TextField from '@mui/material/TextField';
 
-
+//Page for last step of workout tracking flow
+//Handles final notes, end date 
 export const EndWorkout = (props) => {
     const workout_id = props.workout_id
     const user_id = props.user_id
@@ -12,12 +13,14 @@ export const EndWorkout = (props) => {
     const [finalNote, setFinal] = useState(JSON.parse(localStorage.getItem("workout")).finalNote || "");
     const [endDate, setEnd] = useState(JSON.parse(localStorage.getItem("workout")).endDate || format(new Date(), "yyyy-MM-dd HH:mm"));
 
+    //Updates final notes in localStorage
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         workout.finalNote = finalNote;
         localStorage.setItem("workout", JSON.stringify(workout));
     }, [finalNote])
 
+    //Updates endDate in localStorage
     useEffect(() => {
         setError(false);
         let workout = JSON.parse(localStorage.getItem("workout"));

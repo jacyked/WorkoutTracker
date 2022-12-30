@@ -25,22 +25,23 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExerciseDrawer from "./ExerciseDrawer";
 
 
-
+//Number of results to load each time
 const OFFSET = 5;
 
+//Page for logging exercises step of track workout flow
 export const LogExercise = () => {
-    const [open, setOpen] = useState([false])
+
+    //TODO clean these up, refactored this section too many times and dont need some of these anymore
     const [exercises, setExercises] = useState([{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}]);
     const [defaultResults, setDefault] = useState(true);
     const [findExercise, setFindExercise] = useState("");
     const [selected, setSelected] = useState(false);
-    const [selectedEx, setSelectedEx] = useState({id: "", fullName: "", mainMuscleName: "", rating: "", equipmentTypes: []});
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([{id: "", fullName: "", mainMuscleName: "", rating: "", equipmentTypes: []}]);
     const [count, setCount] = useState(0);
-    const [numEx, setNumEx] = useState(0);
     const axiosPrivate = useAxiosPrivate();
 
+    //Exercise search function
     const searchExercise = async (e) => {
         //e.preventDefault();
         setLoading(true);
@@ -69,6 +70,7 @@ export const LogExercise = () => {
         setLoading(false);
     }
 
+    //Load more off previous search based on offset and current count
     const loadMore = async (e) => {
         setLoading(true);
         try{
@@ -96,6 +98,7 @@ export const LogExercise = () => {
         }
   
       }
+      //Check local storage for exercises and update state if found
       function checkLocal() {
         //if exercises is default value, check localstorage
         console.log("Checking Local for exercises")
@@ -115,16 +118,17 @@ export const LogExercise = () => {
 
         }
       }
+      //Add exercise to localstorage
       const addEx = (ex) => {
         //console.log("Adding: " + ex.fullName);
         //console.log("To: " + JSON.stringify(exercises))
-        //if default value, replace placeholder with new ex
+
+        //if default value, replace placeholder with new exercise
         if(exercises[0].index === -1){
             
             let arr = [{index: 0, ex_id: ex._id, name: ex.fullName, sets: [{weight: 0, reps: 0}]}]
             console.log("Index is default, replace with " + JSON.stringify(arr))
             setExercises(arr);
-            setOpen([true])
             console.log("Exercise list after replace: " + JSON.stringify(exercises));
             console.log("Replace complete");
             //console.log(JSON.stringify(exercises))
@@ -156,6 +160,7 @@ export const LogExercise = () => {
         }
         
       }
+      //Show/hide search results for manual toggle instead of just automatic
       const toggleResults = () => {
         if(selected){
             setSelected(false)
@@ -165,6 +170,7 @@ export const LogExercise = () => {
         }
       }
 
+      //Initial check to local storage, keep the state updated with current exercises from local and vice versa
       useEffect(() => {
         console.log("State changed, current ex list: " + JSON.stringify(exercises));
         setLoading(true);

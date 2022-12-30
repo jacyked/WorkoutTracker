@@ -11,7 +11,8 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import CloseIcon from '@mui/icons-material/Close';
 import { WEIGHTUNIT } from "../../constants";
 
-
+//Folding Drawers for each exercise selected. 
+//Contains sets > reps + weight for the desired exercise
 export default function ExerciseDrawer(props) {
     const ex_id = props.exercise.ex_id;
     const length = props.count;
@@ -22,10 +23,12 @@ export default function ExerciseDrawer(props) {
     const [reps, setReps] = useState("");
     const [open, setOpen] = useState((index === (length - 1))?true:false);
   
+    //Open and close drawer, hiding/showing sets info
     const handleClick = () => {
       setOpen(!open);
     };
 
+    //Add set to exercise, also updates in localstorage
     function addSet(){
         //console.log("Add set triggered");
         let arr = sets;
@@ -56,6 +59,8 @@ export default function ExerciseDrawer(props) {
         
         
     }
+    //Update sets in state when exercises are reloaded, weird workaround for when react doesn't re-render. 
+    //Fixed issue of sets being duplicated to next exercise on new exercise add
     useEffect(() => {
         let workout = JSON.parse(localStorage.getItem("workout"));
         let thisEx = workout.exercises.findIndex(ex => ex.ex_id === ex_id);
