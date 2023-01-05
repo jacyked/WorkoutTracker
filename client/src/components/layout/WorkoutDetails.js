@@ -2,6 +2,12 @@ import { ListItem, ListItemText } from "@mui/material";
 import { Container } from "@mui/system";
 import React, { useEffect } from "react";
 import { WEIGHTUNIT } from "../../constants";
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
 
 export const WorkoutDetails = (props) => {
     const workout = JSON.parse(props.workout);

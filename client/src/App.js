@@ -12,6 +12,7 @@ import UserProfile from './components/user/UserProfile';
 import TrackWorkout from './components/user/TrackWorkout';
 import Exercises from './components/user/Exercises';
 import ExerciseInfo from './components/user/ExerciseInfo';
+import EditWorkout from './components/user/EditWorkout';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="user" element={<UserProfile />}/>
             <Route path="track" element={<TrackWorkout />} />
+            <Route path="track/edit" element={<EditWorkout />} />
             <Route path="exercises" element={<Exercises/>}/>
             <Route path="exercises/:exID" element={<ExerciseInfo/>}/>
             

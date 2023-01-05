@@ -101,7 +101,7 @@ const Home = () => {
                       height: 240,
                     }}
                   >
-                    <Typography component="h4" variant="h5">Widget Here</Typography>
+                    <Typography component="h4" variant="h5">Widget 1 Here</Typography>
                     {/*  ADD COMPONENT 1 HERE  */}
                   </Paper>
                 </Grid>
@@ -115,7 +115,8 @@ const Home = () => {
                       height: 240,
                     }}
                   >
-                    <Typography component="h4" variant="h5">Widget here</Typography>
+                    <Typography component="h4" variant="h5">Widget 2 here</Typography>
+                    
                     {/* ADD COMPONENT 2 */}
                   </Paper>
                 </Grid>

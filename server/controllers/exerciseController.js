@@ -1,5 +1,6 @@
 const Exercise = require('../model/exercise');
 
+
 const getExercise = async (req, res) => {
     const _id = req.params.exID;
     console.log("_ID: ", req.params.exID);
