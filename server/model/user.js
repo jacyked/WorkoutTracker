@@ -37,6 +37,10 @@ const userSchema = new Schema({
         type: Array,
         default: []
     },
+    workoutIDs: {
+        type: Array,
+        default: [],
+    },
     gender: {
         type: String,
         default: "",

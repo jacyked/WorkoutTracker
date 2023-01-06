@@ -40,27 +40,32 @@ const saveWO = async (req, res) => {
     //console.log("User found.")
     let arr = user.workoutList;
     arr.push(req.body.workout);
-    const update = await User.findOneAndUpdate({ username: req.user }, {workoutList: arr}, { new: true})
-    try {
-        const workout = JSON.parse(req.body.workout)
-        //create and store the new workout
-        const result = await Workout.create({
-            user: update._id,
-            startDate: workout.startDate,
-            endDate: workout.endDate,
-            default: workout.default,
-            exercises: workout.exercises,
-            notes: workout.notes,
-            finalNotes: workout.finalNotes,
-            other: workout.other,
-            sleep: workout.sleep,
-            targets: workout.targets,
-        });
+    
 
-        console.log("Workout created: ", result);
-    } catch (err) {
-        console.log("error creating workout:", err)
-    }
+    const workout = JSON.parse(req.body.workout)
+    //create and store the new workout
+    const result = await Workout.create({
+        user: update._id,
+        startDate: workout.startDate,
+        endDate: workout.endDate,
+        default: workout.default,
+        exercises: workout.exercises,
+        notes: workout.notes,
+        finalNotes: workout.finalNotes,
+        other: workout.other,
+        sleep: workout.sleep,
+        targets: workout.targets,
+    });
+
+
+    console.log("Workout created: ", result);
+    let idarr = user.workoutIDs
+    idarr.push(result._id);
+
+    const update = await User.findOneAndUpdate({ username: req.user }, {workoutList: arr, workoutIDs: idarr}, { new: true})
+        
+        
+    
     //console.log("User updated: ", JSON.stringify(update))
     
     res.json(update);
