@@ -14,6 +14,15 @@ import useAuth from '../../hooks/useAuth';
 import LinearProgress from '@mui/material/LinearProgress';
 import { EX_URL } from '../../constants';
 import Loading from '../layout/Loading';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
+import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
+import Looks4OutlinedIcon from '@mui/icons-material/Looks4Outlined';
+import Looks5OutlinedIcon from '@mui/icons-material/Looks5Outlined';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
 
 //Display individual exercise details when selected
 const ExerciseInfo = (props) => {
@@ -35,6 +44,19 @@ const ExerciseInfo = (props) => {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
     const [isLoading, setLoading] = useState(false);
+
+    function formatDetails(details){
+      if(details){
+        const reg = /[0-9]+\./;
+        let a1 = details.split(reg);
+        a1 = a1.filter(n => n);
+        console.log("Length: " + a1.length + " List: " + a1.toString())
+        return a1;
+      }
+      else{
+        return ["None"];
+      }
+    }
     
     
     
@@ -106,13 +128,32 @@ const ExerciseInfo = (props) => {
                 {(isLoading)? (
                     <Loading />
                 ):( <Box>
-                      <Typography variant="h4" component='h1'>{thisEx.fullName} <Button variant="outlined" color={(parseFloat(thisEx.rating) <= 0)?"secondary":(parseFloat(thisEx.rating) <= 3.3)?"error":(parseFloat(thisEx.rating) <= 6.6)?"warning":(parseFloat(thisEx.rating) <= 10)?"success":"secondary" }>{((parseFloat(thisEx.rating) >0) && ((parseFloat(thisEx.rating) <= 10)))?parseFloat(thisEx.rating):"N/A"}</Button></Typography>
-                      <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName}</Typography>
-                      <Typography variant="subtitle2" >Other Targets: {thisEx?.otherMuscles.toString()}</Typography>
-                      <Typography variant="subtitle1">Equipment: {thisEx.equipmentTypes.toString()}</Typography>
-                      <Typography variant="subtitle2" >Optional Equipment: {thisEx?.equipment.toString()}</Typography>
+                      <Typography variant="h4" component='h1'>{thisEx.fullName}  
+                      {(parseFloat(thisEx.rating) <= 0)
+                            //invalid
+                            ? <CheckBoxOutlineBlankOutlinedIcon sx={{float: 'right'}} fontSize="large" />
+                            //valid
+                            :(parseFloat(thisEx.rating) <= 2)
+                            ? <LooksOneOutlinedIcon sx={{float: 'right'}} fontSize="large"/>
+                            :(parseFloat(thisEx.rating) <= 4)
+                            ? <LooksTwoOutlinedIcon sx={{float: 'right'}} fontSize="large" color="error"/>
+                            :(parseFloat(thisEx.rating) <= 6)
+                            ?<Looks3OutlinedIcon sx={{float: 'right'}} fontSize="large" color="warning"/>
+                            :(parseFloat(thisEx.rating) <= 8)
+                            ?<Looks4OutlinedIcon  sx={{float: 'right'}} fontSize="large" style={{color: '#b6e824'}}/>
+                            :(parseFloat(thisEx.rating) <= 10)
+                            ?<Looks5OutlinedIcon sx={{float: 'right'}} fontSize="large" color="success"/>
+                            :<CheckBoxOutlineBlankOutlinedIcon sx={{float: 'right'}} fontSize="large"/>
+                      }</Typography>
+                      <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName + thisEx?.otherMuscles.toString()}</Typography>
+                      <Typography variant="subtitle1">Equipment: {thisEx?.equipment.toString() + thisEx.equipmentTypes.toString()}</Typography>
                       <br />
-                      <Typography variant="body2">{thisEx?.description}</Typography>
+                      <Typography variant="body1">Instructions:</Typography>
+                      <List>
+                        {formatDetails(thisEx?.description).map((step, i) => (
+                          <ListItemText secondary={(i + 1) + ". " + step} />
+                        ))}
+                      </List>
                     </Box>
                 )}
                 </Paper>
