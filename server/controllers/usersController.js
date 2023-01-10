@@ -45,7 +45,7 @@ const saveWO = async (req, res) => {
     const workout = JSON.parse(req.body.workout)
     //create and store the new workout
     const result = await Workout.create({
-        user: update._id,
+        user: user._id,
         startDate: workout.startDate,
         endDate: workout.endDate,
         default: workout.default,

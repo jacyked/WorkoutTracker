@@ -19,6 +19,11 @@ import { format } from 'date-fns';
 import { LogExercise } from "../layout/LogExercise";
 import { StartWorkout } from '../layout/StartWorkout';
 import { EndWorkout } from '../layout/EndWorkout';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 //Container of track workout flow
 //Controles step with associated page, as well as initiate/submit workout 
@@ -31,6 +36,35 @@ const TrackWorkout = () => {
   const [steps, setSteps] = useState(3);
   const [activeStep, setActiveStep] = useState(0);
   const [thisWorkout, setWorkout] = useState();
+
+  const [open, setOpen] = useState(false);
+ 
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (e) => {
+    console.log(e + " clicked, closing now.");
+    if(e == 2){
+      console.log("Replacing workout in state with black workout");
+      let workout = {
+        userID: auth?.currUser?._id,
+        startDate: format(new Date(), "yyyy-MM-dd HH:mm"), 
+        endDate: "", 
+        notes: [],
+        other: '',
+        sleep: '',
+        exercises: [{index: -1, ex_id: "", name: "", sets: [{weight: -1, reps: -1}]}],
+        targets: [],
+        finalNote: "",
+        default: true,
+      }
+      localStorage.setItem("workout", JSON.stringify(workout));
+      setWorkout(workout);
+    }
+    setOpen(false);
+  };
 
   //Corresponding page for each step
   const stepFunctions = [
@@ -116,8 +150,14 @@ const TrackWorkout = () => {
       let workout = JSON.parse(localStorage.getItem("workout"))
       // If found, save in state
       if(workout){
-        setWorkout(workout)
-        console.log("Workout found in local, saving to state. ")
+        if(workout.exercises[0].index != -1)
+          handleClickOpen();
+        //while(option === 0){
+          //wait until selection
+        //}
+        setWorkout(workout);
+        console.log("Workout found in local, chosen to continue. saving to state. ")
+      
       }
       //If not found, create, save in storage, and then save in state
       else{
@@ -203,7 +243,28 @@ const TrackWorkout = () => {
                 </Paper>
           </Container>
         </Box>
-      </Box> 
+      </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="Continue Workout"
+        aria-describedby="Incomplete workout found"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Continue workout?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            An incomplete workout was found. Would you like to resume tracking?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={(e) => handleClose(e.target.value)} value={2} variant="filled">Discard</Button>
+          <Button onClick={(e) => handleClose(e.target.value)} value={1} autoFocus>
+            Continue
+          </Button>
+        </DialogActions>
+      </Dialog> 
     </React.Fragment>
     )
 }
