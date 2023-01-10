@@ -13,6 +13,7 @@ import { AppSideBar } from '../layout/AppSideBar.js';
 import useAuth from '../../hooks/useAuth';
 import LinearProgress from '@mui/material/LinearProgress';
 import { EX_URL } from '../../constants';
+import Loading from '../layout/Loading';
 
 //Display individual exercise details when selected
 const ExerciseInfo = (props) => {
@@ -103,7 +104,7 @@ const ExerciseInfo = (props) => {
                   }}
                 >
                 {(isLoading)? (
-                    < LinearProgress maxWidth={400}/>
+                    <Loading />
                 ):( <Box>
                       <Typography variant="h4" component='h1'>{thisEx.fullName} <Button variant="outlined" color={(parseFloat(thisEx.rating) <= 0)?"secondary":(parseFloat(thisEx.rating) <= 3.3)?"error":(parseFloat(thisEx.rating) <= 6.6)?"warning":(parseFloat(thisEx.rating) <= 10)?"success":"secondary" }>{((parseFloat(thisEx.rating) >0) && ((parseFloat(thisEx.rating) <= 10)))?parseFloat(thisEx.rating):"N/A"}</Button></Typography>
                       <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName}</Typography>
