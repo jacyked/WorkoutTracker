@@ -93,6 +93,10 @@ const exerciseSchema = new Schema({
         type: Array,
         required: false,
     },
+    video: {
+        type: Array,
+        required: false,
+    },
 
 });
 exerciseSchema.index({'$**': 'text'});

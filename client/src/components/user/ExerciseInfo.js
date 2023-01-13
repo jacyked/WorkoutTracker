@@ -36,11 +36,9 @@ const ExerciseInfo = (props) => {
       equipment: "",
       description: "",
       rating: "",
-
-
-
-
+      video: "",
     });
+
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
     const [isLoading, setLoading] = useState(false);
@@ -50,7 +48,7 @@ const ExerciseInfo = (props) => {
         const reg = /[0-9]+\./;
         let a1 = details.split(reg);
         a1 = a1.filter(n => n);
-        console.log("Length: " + a1.length + " List: " + a1.toString())
+        //console.log("Length: " + a1.length + " List: " + a1.toString())
         return a1;
       }
       else{
@@ -145,8 +143,17 @@ const ExerciseInfo = (props) => {
                             ?<Looks5OutlinedIcon sx={{float: 'right'}} fontSize="large" color="success"/>
                             :<CheckBoxOutlineBlankOutlinedIcon sx={{float: 'right'}} fontSize="large"/>
                       }</Typography>
-                      <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName + thisEx?.otherMuscles.toString()}</Typography>
-                      <Typography variant="subtitle1">Equipment: {thisEx?.equipment.toString() + thisEx.equipmentTypes.toString()}</Typography>
+                      <Typography variant="subtitle1" >Targets: {thisEx.mainMuscleName}</Typography>
+                      <Typography variant="subtitle1">Equipment: {thisEx?.equipment.toString() + thisEx?.equipmentTypes.toString()}</Typography>
+                      <br />
+                      <div>
+                        <iframe
+                            width={'100%'}
+                            src={thisEx?.video[0]?.href}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title="Video" />
+                      </div>
                       <br />
                       <Typography variant="body1">Instructions:</Typography>
                       <List>
