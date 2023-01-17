@@ -18,7 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import { AppSideBar } from '../layout/AppSideBar.js';
-import { muscleTypes, equipmentTypes, ALLEX_URL } from "../../constants";
+import { muscleTypes, equipmentTypes, ALLEX_URL, SEARCH_EX_URL } from "../../constants";
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
@@ -28,6 +28,10 @@ import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
 import Looks4OutlinedIcon from '@mui/icons-material/Looks4Outlined';
 import Looks5OutlinedIcon from '@mui/icons-material/Looks5Outlined';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 
 //Page size of exercises to display
 const OFFSET = 10;
@@ -44,6 +48,7 @@ const Exercises = () => {
     const navigate = useNavigate();
     const setRef = useRef();
     const { auth } = useAuth();
+    const [findExercise, setFindExercise] = useState("");
   
     useEffect(() => {
         
@@ -99,7 +104,8 @@ const Exercises = () => {
               limit: OFFSET,
               skip: (count * OFFSET),
               targetFilter: targetFilter,
-              equipFilter: equipFilter
+              equipFilter: equipFilter,
+              search: findExercise,
             }
         });
         //console.log("Fired: Load More");
@@ -144,9 +150,33 @@ const Exercises = () => {
       }
 
     }
+    const searchExercise = async () => {
+      setCount(1)
+      setIsLoading(true);
+      try{
+        const response = await axiosPrivate.get(SEARCH_EX_URL, {
+            params: {
+              limit: OFFSET,
+              skip: 0,
+              searchTerm: findExercise
+            }
+        });
+        //console.log("Fired: Load More");
+        //console.log("DATA: " + JSON.stringify(response.data));
+        const list = Array.from(response.data);
+        list.forEach((i) => {
+          console.log(i.fullName)})
+        setExList(list);
+        setIsLoading(false);
+
+        
+      }catch(err){
+          console.error(err);
+      }
+
+    }
 
     useEffect(() => {
-      
       addFilter();
     }, [targetFilter, equipFilter])
 
@@ -182,6 +212,21 @@ const Exercises = () => {
                         flexDirection: 'column',
                       }}
                     >
+                      <TextField 
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton aria-label="search" color="primary" onClick={(e) => searchExercise(e)}>
+                                        <SearchIcon />
+                                    </IconButton> 
+                                </InputAdornment>
+                            ),
+                        }} 
+                        id="exSearch"
+                        name="exSearch"
+                        label="Find Exercise "
+                        value={findExercise}
+                        onChange={(e) => setFindExercise(e.target.value)}/>
                         <Table size="small" stickyHeader aria-label="sticky table">
                           <TableHead>
                             <TableRow>
