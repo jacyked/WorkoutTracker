@@ -8,11 +8,13 @@ import { Typography } from '@mui/material';
 import { differenceInMinutes } from 'date-fns';
 import useAuth from '../../hooks/useAuth';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 //Display recent workouts. 
 //TODO add sorting (most recent first), add view all button
 const WorkoutList = (props) => {
   const { auth } = useAuth();
+  const navigate = useNavigate();
   const list = auth.currUser.workoutList.sort(compareWorkout).slice(0, 5);
   //console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
 
@@ -51,9 +53,9 @@ const WorkoutList = (props) => {
         <TableBody>
           {(Array.isArray(list) && (list.length > 0))?(
           list.map((row) => (
-            <TableRow key={JSON.parse(row)._id}>
-              <TableCell>{formatDate(JSON.parse(row).startDate)}</TableCell>
-              <TableCell>{JSON.parse(row).targets.map((targ, i, targets) => (
+            <TableRow key={row._id} onClick={() => {console.log(row._id); console.log(typeof(row._id)); navigate('/track/' + row._id)}}>
+              <TableCell>{formatDate(row.startDate)}</TableCell>
+              <TableCell>{row.targets.map((targ, i, targets) => (
                   (i === (targets.length - 1))
                     ?(targ + " ")
                     :(targ + ", ") 

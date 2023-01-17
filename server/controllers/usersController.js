@@ -26,6 +26,9 @@ const getUser = async (req, res) => {
     }
     res.json(user);
 }
+
+//TODO move to workoutcontroller, bit of both since updates user workoutlist, workoutID array, as well as add to workout collection
+// Best solution is likely to split it up but will deal with later
 const saveWO = async (req, res) => {
     console.log("Fetching user: ", JSON.stringify(req.user), ", Workout: ", (req.body.workout));
     //console.log(req.params.workout)
@@ -36,10 +39,7 @@ const saveWO = async (req, res) => {
         //console.log("No User found.")
         return res.status(204).json({ 'message': `Username ${req.user} not found` });
     }
-    //Add workout to user then save
-    //console.log("User found.")
-    let arr = user.workoutList;
-    arr.push(req.body.workout);
+
     
 
     const workout = JSON.parse(req.body.workout)
@@ -61,6 +61,11 @@ const saveWO = async (req, res) => {
     console.log("Workout created: ", result);
     let idarr = user.workoutIDs
     idarr.push(result._id);
+
+    //Add workout to user then save
+    //console.log("User found.")
+    let arr = user.workoutList;
+    arr.push(result);
 
     const update = await User.findOneAndUpdate({ username: req.user }, {workoutList: arr, workoutIDs: idarr}, { new: true})
         
