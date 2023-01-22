@@ -19,8 +19,8 @@ const WorkoutList = (props) => {
   //console.log("List grabbed: " + list + " Start date: " + JSON.parse(list[0]).startDate)
 
   function compareWorkout(a, b){
-    a = JSON.parse(a);
-    b = JSON.parse(b);
+    //a = JSON.parse(a);
+    //b = JSON.parse(b);
     let dateA = new Date(a.startDate)
     let dateB = new Date(b.startDate)
     if(dateA < dateB){

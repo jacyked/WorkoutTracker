@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
 
 const Loading = () => {
-  
+
     return (
       <Backdrop open={true}
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>

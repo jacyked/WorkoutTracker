@@ -13,6 +13,7 @@ import { Typography } from '@mui/material';
 
 import WorkoutList from './user/WorkoutList';
 import { USER_URL } from '../constants';
+import { BigThree } from "./data/BigThree.js";
 
 const Home = () => {
     const [thisUser, setUser] = useState();
@@ -115,9 +116,10 @@ const Home = () => {
                       height: 240,
                     }}
                   >
-                    <Typography component="h4" variant="h5">Widget 2 here</Typography>
+                    <Typography component="h4" variant="h5">Estimated ORM:</Typography>
                     
                     {/* ADD COMPONENT 2 */}
+                    <BigThree />
                   </Paper>
                 </Grid>
               </Grid>

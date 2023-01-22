@@ -5,36 +5,40 @@ import {
   LineSeries,
   SplineSeries,
 } from '@devexpress/dx-react-chart-material-ui';
-
-function calcMax(arr) {
-    let max = 0;
-    arr.forEach((set) => {
-
-    })
-    return max;
-}
-
-function buildData(){
-     
-}
+import { GET_DATA } from '../../constants';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export const BigThree = (props) => {
-    const [data, setData] = useState(buildData)
+    const axiosPrivate = useAxiosPrivate();
+    const [data, setData] = useState(buildData);
+    
+    
+    function calcMax(arr) {
+        let max = 0;
+        arr.forEach((set) => {
+    
+        })
+        return max;
+    }
+    
+    async function buildData(){
+        try{
+            const response = await axiosPrivate.get(GET_DATA);
+            console.log("###########Fired: BigThree##############");
+            console.log("DATA: " + JSON.stringify(response.data));
+            return(response.data);
+        }catch(err){
+            
+            console.error("######ERRR#####"+ err);
+        }
+        return("")
+    }
+
+
 
     return (
       <Paper>
-        <Chart
-          data={data}
-        >
-          <LineSeries
-            valueField="lineValue"
-            argumentField="argument"
-          />
-          <SplineSeries
-            valueField="splineValue"
-            argumentField="argument"
-          />
-        </Chart>
+
       </Paper>
     );
 }
