@@ -45,11 +45,11 @@ const getBigThree = async (req, res) => {
     const deadliftlist = await Workout.find({user: userID, exercises:{$elemMatch:{name: "Barbell Deadlift"}}})
     let deadliftSets = [];
     deadliftlist.forEach((wo) => {
-        let ex = wo.exercises.find(name == "Barbell Deadlift");
+        let ex = wo.exercises.find(element => element.name == "Barbell Deadlift");
         deadliftSets.push({name: "Barbell Deadlift", startDate: wo.startDate, sets: ex.sets})
     });
 
-    console.log("Deadlift sets: ", deadliftSets.toString());
+    console.log("Deadlift sets: ", JSON.stringify(deadliftSets));
     return res.json({"message": "Completed"});
 
 }
